@@ -60,7 +60,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Sidebar Filter Data & Gambar Kiri Atas dengan Gradasi
+# 3. Sidebar Filter Data & Gambar Kiri Atas dengan Gradasi (Teks Pengabdian Dihapus)
 st.sidebar.markdown("""
     <div style="position: relative; text-align: center; border-radius: 8px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
         <img src="https://i.ytimg.com/vi/8PHHFvzMDac/maxresdefault.jpg" style="width: 100%; height: 130px; object-fit: cover; display: block;">
@@ -68,7 +68,6 @@ st.sidebar.markdown("""
             <h3 style="color: #FFD700 !important; font-size: 14px !important; font-weight: 800 !important; margin: 0; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); text-transform: uppercase; line-height: 1.3;">
                 Desa Wisata Semenanjung Badran
             </h3>
-            <p style="color: #E0E0E0 !important; font-size: 9px !important; margin: 2px 0 0 0; font-weight: 600;">Program Pengabdian Kepada Masyarakat</p>
         </div>
     </div>
 """, unsafe_allow_html=True)
