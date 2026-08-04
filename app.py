@@ -137,7 +137,7 @@ elif filter_jenis == "Kuliner & Outbound":
 chart_factor = max(chart_factor, 0.15)
 keterlibatan_masyarakat_val = int(78 * min(chart_factor, 1.2))
 
-# 4. Konten HTML/CSS Dashboard (Optimized Layout & Balanced Sizes)
+# 4. Konten HTML/CSS Dashboard (Stable Layout)
 dashboard_html = f"""
 <!DOCTYPE html>
 <html lang="id">
@@ -274,7 +274,6 @@ dashboard_html = f"""
                 <canvas id="facilityChart" height="110"></canvas>
             </div>
 
-            <!-- Jenis Wisatawan Pindah ke Kolom Layanan Pariwisata -->
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-users-rectangle" style="color: #2E7D32;"></i> Jenis Wisatawan (Proporsi)</div>
                 <div class="proportion-container">
@@ -317,10 +316,9 @@ dashboard_html = f"""
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-wallet" style="color: #1565C0;"></i> Pengeluaran Pariwisata (%)</div>
-                <canvas id="expenseChart" height="135"></canvas>
+                <canvas id="expenseChart" height="115"></canvas>
             </div>
 
-            <!-- Struktur Pengelolaan -->
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-sitemap" style="color: #1565C0;"></i> Struktur Pengelolaan</div>
                 <div class="flow-container">
@@ -334,7 +332,6 @@ dashboard_html = f"""
                 </div>
             </div>
 
-            <!-- Keterlibatan Masyarakat Terhubung Filter -->
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-people-group" style="color: #1565C0;"></i> Keterlibatan Masyarakat</div>
                 <div class="community-box">
@@ -368,25 +365,21 @@ dashboard_html = f"""
                 </div>
             </div>
 
-            <!-- Sumber Informasi Wisatawan -->
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-circle-info" style="color: #4A148C;"></i> Sumber Informasi Wisatawan (%)</div>
-                <canvas id="sourceChart" height="135"></canvas>
+                <canvas id="sourceChart" height="115"></canvas>
             </div>
 
-            <!-- Engagement Media Sosial Terhubung Filter -->
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-chart-line" style="color: #4A148C;"></i> Engagement Media Sosial</div>
                 <canvas id="engagementChart" height="110"></canvas>
             </div>
 
-            <!-- Tingkat Kepuasan Promosi / Informasi -->
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-square-poll-vertical" style="color: #4A148C;"></i> Tingkat Kepuasan Promosi (%)</div>
                 <canvas id="satisfactionPromoChart" height="110"></canvas>
             </div>
 
-            <!-- Slogan Card dengan Gradasi & Ilustrasi Menarik -->
             <div class="slogan-card">
                 <div class="slogan-item">
                     <i class="fa-solid fa-rocket"></i>
@@ -398,7 +391,6 @@ dashboard_html = f"""
                 </div>
             </div>
 
-            <!-- Fade Image Banner -->
             <div class="fade-img-container">
                 <img src="https://radartv.disway.id/upload/59c6804c4c660241d4c826c4a1f31924.jpg" alt="Semenanjung Badran">
                 <div class="fade-overlay">
@@ -409,7 +401,6 @@ dashboard_html = f"""
 
     </div>
 
-    <!-- Banner Footer Slogan -->
     <div class="footer-banner">
         “Bersama Membangun Pariwisata Desa Badransari yang Berkelanjutan, Berdaya Saing, dan Berbasis Masyarakat”
     </div>
@@ -504,7 +495,7 @@ dashboard_html = f"""
                     borderWidth: 1
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 8, font: {{ size: 7.5 }} }} }}, tooltip: informativeTooltip }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 8, font: {{ size: 7.5 }} }} }}, tooltip: informativeTooltip }} }}
         }});
 
         new Chart(document.getElementById('sourceChart').getContext('2d'), {{
@@ -518,10 +509,9 @@ dashboard_html = f"""
                     borderWidth: 1
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 8, font: {{ size: 7.5 }} }} }}, tooltip: informativeTooltip }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 8, font: {{ size: 7.5 }} }} }}, tooltip: informativeTooltip }} }}
         }});
 
-        // Engagement Media Sosial Terhubung Filter
         new Chart(document.getElementById('engagementChart').getContext('2d'), {{
             type: 'line',
             data: {{
@@ -534,7 +524,6 @@ dashboard_html = f"""
             options: {{ responsive: true, plugins: {{ legend: {{ position: 'top', labels: {{ boxWidth: 8, font: {{ size: 7.5 }} }} }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
-        // Tingkat Kepuasan Promosi Chart
         new Chart(document.getElementById('satisfactionPromoChart').getContext('2d'), {{
             type: 'bar',
             data: {{
