@@ -12,16 +12,15 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. Styling CSS untuk Konsistensi Tampilan & Anti Horizontal Scroll
+# 2. Styling CSS untuk Konsistensi Tampilan
 st.markdown("""
     <style>
     .block-container {
-        padding-top: 0.3rem !important;
-        padding-bottom: 0.3rem !important;
-        padding-left: 0.8rem !important;
-        padding-right: 0.8rem !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
         max-width: 100% !important;
-        overflow-x: hidden !important;
     }
     
     [data-testid="stSidebar"] {
@@ -39,28 +38,28 @@ st.markdown("""
     
     .sidebar-title {
         text-align: center; 
-        padding: 4px 0 8px 0; 
+        padding: 5px 0 12px 0; 
         border-bottom: 1px solid rgba(255,255,255,0.2); 
-        margin-bottom: 6px;
+        margin-bottom: 10px;
     }
     .sidebar-title h3 {
         color: #FFD700 !important; 
-        font-size: 12px; 
+        font-size: 13px; 
         font-weight: 800; 
         margin: 0; 
-        line-height: 1.3; 
+        line-height: 1.4; 
         text-transform: uppercase;
     }
     .sidebar-title p { 
         color: #E0E0E0 !important; 
-        font-size: 8.5px; 
-        margin: 2px 0 0 0; 
+        font-size: 9px; 
+        margin: 3px 0 0 0; 
     }
-    iframe { border: none; border-radius: 6px; }
+    iframe { border: none; border-radius: 8px; }
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Sidebar Filter Data
+# 3. Sidebar Filter Data (Tahun mencakup opsi "Semua")
 st.sidebar.markdown("""
     <div class="sidebar-title">
         <h3>Hibah BIMA Semenanjung Badran ITERA</h3>
@@ -76,29 +75,35 @@ filter_jenis = st.sidebar.selectbox("⛰️ Jenis Wisata", ["Semua", "Wisata Ala
 
 st.sidebar.markdown("<br>", unsafe_allow_html=True)
 st.sidebar.markdown("""
-    <div style="background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); text-align: center;">
+    <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); text-align: center;">
         <p style="font-size: 9px; font-weight: 700; color: #FFD700; margin:0; text-transform: uppercase;">Destinasi Unggulan</p>
-        <p style="font-size: 11px; font-weight: 800; color: white; margin: 2px 0 0 0;">Semenanjung Badran</p>
-        <p style="font-size: 8px; color: #CCC; margin: 1px 0 0 0;">Desa Badransari</p>
+        <p style="font-size: 11px; font-weight: 800; color: white; margin: 3px 0 0 0;">Semenanjung Badran</p>
+        <p style="font-size: 8px; color: #CCC; margin: 2px 0 0 0;">Desa Badransari</p>
     </div>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# PEMISAHAN LOGIKA FILTER
+# PEMISAHAN LOGIKA: 
+# 1. year_factor (Hanya untuk bagian atas, followers, pokdarwis, dll)
+# 2. chart_factor (Untuk chart/grafik di bawah, bergantung semua filter)
 # ==========================================
+
+# 1. Faktor Khusus Tahun (Bagian Atas & Metrik Utama)
 year_factor = 1.0
 if filter_tahun == "2024":
     year_factor = 0.88
 elif filter_tahun == "2026":
     year_factor = 1.25
 elif filter_tahun == "Semua":
-    year_factor = 2.45
+    year_factor = 2.45  # Akumulasi total seluruh tahun
 
+# Metrik Atas & Manajemen (Hanya Berdasarkan Tahun)
 total_pengunjung = int(4922 * year_factor)
 pendapatan_total = round(152.7 * year_factor, 1)
 pengunjung_hari_ini = int(176 * (1.1 if filter_tahun != "Semua" else 1.5))
 tiket_val = round(78.4 * year_factor, 1)
 
+# Manajemen (Pokdarwis, Pengelola, UMKM, dll - Berdasarkan Tahun)
 pokdarwis_val = 3 if filter_tahun != "Semua" else 5
 pengelola_val = int(27 * year_factor)
 umkm_aktif_val = int(42 * year_factor)
@@ -106,12 +111,14 @@ event_val = 8 if filter_tahun != "Semua" else 14
 mitra_val = int(12 * year_factor)
 relawan_val = int(36 * year_factor)
 
+# Followers & Media Sosial (Berbasis Tahun)
 ig_followers_val = f"{int(3842 * year_factor):,}".replace(",", ".")
 tiktok_val = f"{int(2156 * year_factor):,}".replace(",", ".")
 fb_reach_val = f"{int(8745 * year_factor):,}".replace(",", ".")
 website_val = f"{int(5231 * year_factor):,}".replace(",", ".")
 review_val = int(157 * year_factor)
 
+# 2. Faktor Lengkap untuk Grafik/Chart di Bawah (Bergantung Semua Filter)
 chart_factor = year_factor
 if filter_bulan != "Semua": 
     chart_factor *= 0.12
@@ -135,9 +142,8 @@ elif filter_jenis == "Kuliner & Outbound":
     chart_factor *= 0.25
 
 chart_factor = max(chart_factor, 0.15)
-keterlibatan_masyarakat_val = int(78 * min(chart_factor, 1.2))
 
-# 4. Konten HTML/CSS Dashboard (Precise Compact Height & Balanced Fit)
+# 4. Konten HTML/CSS Dashboard
 dashboard_html = f"""
 <!DOCTYPE html>
 <html lang="id">
@@ -148,75 +154,70 @@ dashboard_html = f"""
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {{ font-family: 'Inter', sans-serif; box-sizing: border-box; }}
-        body {{ background-color: #F0F4F8; margin: 0; padding: 0; overflow: hidden; }}
+        body {{ background-color: #F0F4F8; margin: 0; padding: 0; }}
         
         .top-banner {{
-            background: linear-gradient(rgba(15, 50, 85, 0.9), rgba(15, 50, 85, 0.8)), 
+            background: linear-gradient(rgba(15, 50, 85, 0.88), rgba(15, 50, 85, 0.78)), 
                         url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2000&auto=format&fit=crop') center/cover;
-            padding: 8px 12px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; color: white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }}
-        .logo-area {{ display: flex; align-items: center; gap: 8px; }}
-        .logo-badge {{ background: white; color: #0F3255; font-weight: 800; font-size: 9px; padding: 3px 6px; border-radius: 3px; }}
-        .title-area h1 {{ font-size: 13px; font-weight: 800; margin: 0; text-transform: uppercase; color: #FFD700; }}
-        .title-area p {{ font-size: 8px; font-weight: 600; margin: 1px 0 0 0; color: #E0E0E0; }}
+        .logo-area {{ display: flex; align-items: center; gap: 12px; }}
+        .logo-badge {{ background: white; color: #0F3255; font-weight: 800; font-size: 10px; padding: 5px 8px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+        .title-area h1 {{ font-size: 15px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; color: #FFD700; }}
+        .title-area p {{ font-size: 9px; font-weight: 600; margin: 2px 0 0 0; color: #E0E0E0; }}
         
-        .stats-group {{ display: flex; gap: 6px; }}
-        .stat-item {{ background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.3); padding: 3px 6px; border-radius: 4px; text-align: center; }}
-        .stat-item span {{ display: block; font-size: 6px; font-weight: 700; color: #FFD700; text-transform: uppercase; }}
-        .stat-item strong {{ font-size: 9.5px; font-weight: 800; color: white; }}
+        .stats-group {{ display: flex; gap: 8px; }}
+        .stat-item {{ background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.3); padding: 4px 8px; border-radius: 6px; text-align: center; }}
+        .stat-item span {{ display: block; font-size: 6.5px; font-weight: 700; color: #FFD700; text-transform: uppercase; }}
+        .stat-item strong {{ font-size: 11px; font-weight: 800; color: white; }}
 
-        .three-column-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 4px; width: 100%; }}
-        .column-box {{ display: flex; flex-direction: column; gap: 5px; min-width: 0; }}
+        .three-column-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }}
+        .column-box {{ display: flex; flex-direction: column; gap: 8px; }}
         
-        .card-box {{ background: white; border-radius: 5px; padding: 6px 8px; border: 1px solid #E0E0E0; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }}
+        .card-box {{ background: white; border-radius: 8px; padding: 8px 10px; border: 1px solid #E0E0E0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }}
         
-        .col-header {{ padding: 5px 8px; border-radius: 4px; font-weight: 800; color: white; font-size: 9px; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; text-transform: uppercase; }}
+        .col-header {{ padding: 6px 10px; border-radius: 6px; font-weight: 800; color: white; font-size: 9.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }}
         .bg-green {{ background: #2E7D32; }}
         .bg-blue {{ background: #1565C0; }}
         .bg-purple {{ background: #4A148C; }}
 
-        .metric-subgrid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }}
-        .m-card {{ background: #FAFAFA; border-radius: 4px; padding: 3px 2px; border: 1px solid #EAEAEA; text-align: center; height: 50px; display: flex; flex-direction: column; justify-content: center; align-items: center; }}
-        .m-icon {{ font-size: 8px; margin-bottom: 1px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }}
-        .m-title {{ font-size: 5.5px; font-weight: 800; color: #555; text-transform: uppercase; line-height: 1.1; width: 100%; }}
-        .m-value {{ font-size: 9px; font-weight: 800; color: #111; margin: 1px 0; }}
-        .m-sub {{ font-size: 5.5px; font-weight: 700; color: #777; }}
+        .metric-subgrid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }}
+        .m-card {{ background: #FAFAFA; border-radius: 6px; padding: 4px 2px; border: 1px solid #EAEAEA; text-align: center; height: 72px; display: flex; flex-direction: column; justify-content: center; align-items: center; }}
+        .m-icon {{ font-size: 8.5px; margin-bottom: 2px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }}
+        .m-title {{ font-size: 6px; font-weight: 800; color: #555; text-transform: uppercase; line-height: 1.1; width: 100%; }}
+        .m-value {{ font-size: 10.5px; font-weight: 800; color: #111; margin: 1px 0; }}
+        .m-sub {{ font-size: 6px; font-weight: 700; color: #777; }}
 
-        .section-title {{ font-size: 8px; font-weight: 800; color: #333; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; text-transform: uppercase; border-bottom: 1.5px solid #F0F0F0; padding-bottom: 2px; }}
+        .section-title {{ font-size: 9px; font-weight: 800; color: #333; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; text-transform: uppercase; border-bottom: 2px solid #F0F0F0; padding-bottom: 3px; }}
 
-        .proportion-container {{ margin-top: 2px; }}
-        .proportion-bar-wrapper {{ display: flex; height: 14px; border-radius: 4px; overflow: hidden; background: #eee; margin: 3px 0; }}
-        .prop-segment-1 {{ background: #2E7D32; width: {lampung_prop}%; display: flex; align-items: center; justify-content: center; color: white; font-size: 7px; font-weight: 800; }}
-        .prop-segment-2 {{ background: #1565C0; width: {luar_prop}%; display: flex; align-items: center; justify-content: center; color: white; font-size: 7px; font-weight: 800; }}
-        .prop-legend {{ display: flex; justify-content: space-between; font-size: 7px; font-weight: 700; color: #555; }}
+        .proportion-container {{ margin-top: 4px; }}
+        .proportion-bar-wrapper {{ display: flex; height: 15px; border-radius: 6px; overflow: hidden; background: #eee; margin: 4px 0; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }}
+        .prop-segment-1 {{ background: #2E7D32; width: {lampung_prop}%; display: flex; align-items: center; justify-content: center; color: white; font-size: 7.5px; font-weight: 800; white-space: nowrap; overflow: hidden; }}
+        .prop-segment-2 {{ background: #1565C0; width: {luar_prop}%; display: flex; align-items: center; justify-content: center; color: white; font-size: 7.5px; font-weight: 800; white-space: nowrap; overflow: hidden; }}
+        .prop-legend {{ display: flex; justify-content: space-between; font-size: 7.5px; font-weight: 700; color: #555; }}
 
-        .flow-container {{ display: flex; flex-direction: column; gap: 2px; align-items: center; }}
-        .flow-node {{ background: #E8F5E9; border: 1px solid #2E7D32; color: #1E3A1E; padding: 3px 6px; border-radius: 3px; font-size: 7.5px; font-weight: 800; width: 100%; text-align: center; }}
+        .flow-container {{ display: flex; flex-direction: column; gap: 3px; align-items: center; }}
+        .flow-node {{ background: #E8F5E9; border: 1px solid #2E7D32; color: #1E3A1E; padding: 4px 8px; border-radius: 4px; font-size: 8px; font-weight: 800; width: 100%; text-align: center; }}
         .flow-node.blue {{ background: #E3F2FD; border-color: #1565C0; color: #0D47A1; }}
         .flow-node.orange {{ background: #FFF8E1; border-color: #F57F17; color: #E65100; }}
         .flow-node.purple {{ background: #EDE7F6; border-color: #4A148C; color: #311B92; }}
-        .flow-arrow {{ font-size: 6.5px; color: #666; margin: -2px 0; }}
+        .flow-arrow {{ font-size: 8px; color: #666; margin: -2px 0; }}
 
-        .community-box {{ display: flex; align-items: center; gap: 6px; background: #E8F5E9; padding: 4px 6px; border-radius: 4px; border: 1px solid #C8E6C9; }}
-        .community-icons-group {{ display: flex; gap: 2px; color: #2E7D32; font-size: 10px; background: white; padding: 3px 4px; border-radius: 3px; }}
+        .community-box {{ display: flex; align-items: center; gap: 10px; background: #E8F5E9; padding: 6px 8px; border-radius: 6px; border: 1px solid #C8E6C9; }}
+        .community-icons-group {{ display: flex; gap: 3px; color: #2E7D32; font-size: 12px; background: white; padding: 5px 6px; border-radius: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }}
         .community-info {{ flex-grow: 1; }}
-        .community-info h4 {{ margin: 0; font-size: 8.5px; color: #1E3A1E; font-weight: 800; }}
-        .community-info p {{ margin: 1px 0 2px 0; font-size: 6.5px; color: #388E3C; font-weight: 600; }}
-        .progress-track {{ background: #C8E6C9; height: 4px; border-radius: 2px; width: 100%; overflow: hidden; }}
-        .progress-fill {{ background: #2E7D32; height: 100%; width: {keterlibatan_masyarakat_val}%; border-radius: 2px; }}
+        .community-info h4 {{ margin: 0; font-size: 10px; color: #1E3A1E; font-weight: 800; }}
+        .community-info p {{ margin: 1px 0 3px 0; font-size: 7.5px; color: #388E3C; font-weight: 600; }}
+        .progress-track {{ background: #C8E6C9; height: 5px; border-radius: 3px; width: 100%; overflow: hidden; }}
+        .progress-fill {{ background: #2E7D32; height: 100%; width: 78%; border-radius: 3px; }}
 
-        .slogan-card {{ background: linear-gradient(135deg, #0F3255, #1E3A5F); color: white; padding: 6px 8px; border-radius: 5px; display: flex; flex-direction: column; gap: 4px; border: 1px solid rgba(255,255,255,0.15); }}
-        .slogan-item {{ display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.08); padding: 3px 6px; border-radius: 3px; }}
-        .slogan-item i {{ color: #FFD700; font-size: 9px; }}
-        .slogan-text {{ font-size: 7.5px; font-weight: 700; }}
+        .event-list {{ display: flex; flex-direction: column; gap: 3px; }}
+        .event-item {{ display: flex; align-items: center; background: #FAFAFA; padding: 3px 5px; border-radius: 4px; border-left: 3px solid #1565C0; font-size: 8px; gap: 6px; }}
+        .event-date {{ font-weight: 800; color: #1565C0; min-width: 40px; }}
+        .event-name {{ font-weight: 600; color: #333; }}
 
-        .fade-img-container {{ position: relative; border-radius: 5px; overflow: hidden; border: 1px solid #E0E0E0; max-height: 80px; }}
-        .fade-img-container img {{ width: 100%; height: 80px; object-fit: cover; display: block; }}
-        .fade-overlay {{ position: absolute; bottom: 0; left: 0; right: 0; height: 35px; background: linear-gradient(to top, rgba(15,50,85,0.9), transparent); display: flex; align-items: flex-end; padding: 4px 8px; }}
-        .fade-text {{ color: white; font-size: 7.5px; font-weight: 800; text-transform: uppercase; }}
-
-        .footer-banner {{ background: linear-gradient(135deg, #0F3255, #1565C0); color: white; padding: 6px 10px; border-radius: 4px; text-align: center; margin-top: 4px; font-size: 8px; font-weight: 700; }}
+        .footer-banner {{ background: linear-gradient(135deg, #0F3255, #1565C0); color: white; padding: 8px 12px; border-radius: 6px; text-align: center; margin-top: 6px; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }}
     </style>
 </head>
 <body>
@@ -266,12 +267,12 @@ dashboard_html = f"""
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-chart-line" style="color: #2E7D32;"></i> Tren Kunjungan Wisatawan</div>
-                <canvas id="trendChart" height="75"></canvas>
+                <canvas id="trendChart" height="110"></canvas>
             </div>
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-umbrella" style="color: #2E7D32;"></i> Fasilitas Wisata (Jumlah Unit)</div>
-                <canvas id="facilityChart" height="75"></canvas>
+                <canvas id="facilityChart" height="110"></canvas>
             </div>
 
             <div class="card-box">
@@ -290,8 +291,13 @@ dashboard_html = f"""
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-map-location-dot" style="color: #2E7D32;"></i> Lokasi Semenanjung Badran</div>
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.6!2d105.3076663!3d-5.0563089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMDMnMjIuNyJTIDEwNcKwMTgnMjcuNiJF!5e0!3m2!1sid!2sid!4v1650000000000!5m2!1sid!2sid" 
-                        width="100%" height="75" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.6!2d105.2!3d-5.1!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMDYnMDAnUzEwNcKwMTInMDAuMCJF!5e0!3m2!1sid!2sid!4v1650000000000!5m2!1sid!2sid" 
+                        width="100%" height="115" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
+            <div class="card-box">
+                <div class="section-title"><i class="fa-solid fa-triangle-exclamation" style="color: #2E7D32;"></i> Keluhan Wisatawan</div>
+                <canvas id="complaintChart" height="110"></canvas>
             </div>
         </div>
 
@@ -310,16 +316,6 @@ dashboard_html = f"""
             </div>
 
             <div class="card-box">
-                <div class="section-title"><i class="fa-solid fa-money-bill-trend-up" style="color: #1565C0;"></i> Pendapatan Pariwisata (Juta Rp)</div>
-                <canvas id="revenueChart" height="75"></canvas>
-            </div>
-
-            <div class="card-box">
-                <div class="section-title"><i class="fa-solid fa-wallet" style="color: #1565C0;"></i> Pengeluaran Pariwisata (%)</div>
-                <canvas id="expenseChart" height="75"></canvas>
-            </div>
-
-            <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-sitemap" style="color: #1565C0;"></i> Struktur Pengelolaan</div>
                 <div class="flow-container">
                     <div class="flow-node">🏛️ Pemerintah Desa Badransari</div>
@@ -333,7 +329,28 @@ dashboard_html = f"""
             </div>
 
             <div class="card-box">
-                <div class="section-title"><i class="fa-solid fa-people-group" style="color: #1565C0;"></i> Keterlibatan Masyarakat</div>
+                <div class="section-title"><i class="fa-solid fa-calendar-days" style="color: #1565C0;"></i> Jadwal Event Tahun Ini</div>
+                <div class="event-list">
+                    <div class="event-item"><span class="event-date">14 Jan</span><span class="event-name">Festival Desa Badransari</span></div>
+                    <div class="event-item"><span class="event-date">18 Feb</span><span class="event-name">Pasar UMKM Kreatif</span></div>
+                    <div class="event-item"><span class="event-date">24 Mar</span><span class="event-name">Lomba Perahu Tradisional</span></div>
+                    <div class="event-item"><span class="event-date">12 Mei</span><span class="event-name">Camping & Outbound</span></div>
+                    <div class="event-item"><span class="event-date">20 Jul</span><span class="event-name">Festival Kuliner Desa</span></div>
+                </div>
+            </div>
+
+            <div class="card-box">
+                <div class="section-title"><i class="fa-solid fa-money-bill-trend-up" style="color: #1565C0;"></i> Pendapatan Pariwisata (Juta Rp)</div>
+                <canvas id="revenueChart" height="110"></canvas>
+            </div>
+
+            <div class="card-box">
+                <div class="section-title"><i class="fa-solid fa-wallet" style="color: #1565C0;"></i> Pengeluaran Pariwisata</div>
+                <canvas id="expenseChart" height="110"></canvas>
+            </div>
+
+            <div class="card-box">
+                <div class="section-title"><i class="fa-solid fa-people-group" style="color: #1565C0;"></i> Tingkat Keterlibatan Masyarakat</div>
                 <div class="community-box">
                     <div class="community-icons-group">
                         <i class="fa-solid fa-user"></i>
@@ -341,10 +358,10 @@ dashboard_html = f"""
                         <i class="fa-solid fa-user" style="opacity: 0.6;"></i>
                     </div>
                     <div class="community-info">
-                        <h4>{keterlibatan_masyarakat_val}% Partisipasi Aktif</h4>
+                        <h4>78% Partisipasi Aktif</h4>
                         <p>Masyarakat terlibat dalam homestay, event, kuliner & sadar wisata.</p>
                         <div class="progress-track">
-                            <div class="progress-fill" style="width: {keterlibatan_masyarakat_val}%;"></div>
+                            <div class="progress-fill"></div>
                         </div>
                     </div>
                 </div>
@@ -366,35 +383,31 @@ dashboard_html = f"""
             </div>
 
             <div class="card-box">
-                <div class="section-title"><i class="fa-solid fa-circle-info" style="color: #4A148C;"></i> Sumber Informasi Wisatawan (%)</div>
-                <canvas id="sourceChart" height="75"></canvas>
+                <div class="section-title"><i class="fa-solid fa-map-location-dot" style="color: #4A148C;"></i> Asal Wisatawan</div>
+                <canvas id="originChart" height="110"></canvas>
+            </div>
+
+            <div class="card-box">
+                <div class="section-title"><i class="fa-solid fa-share-nodes" style="color: #4A148C;"></i> Media Promosi (Kontribusi)</div>
+                <canvas id="promoChart" height="110"></canvas>
             </div>
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-chart-line" style="color: #4A148C;"></i> Engagement Media Sosial</div>
-                <canvas id="engagementChart" height="75"></canvas>
+                <canvas id="engagementChart" height="110"></canvas>
             </div>
 
             <div class="card-box">
-                <div class="section-title"><i class="fa-solid fa-square-poll-vertical" style="color: #4A148C;"></i> Tingkat Kepuasan Promosi (%)</div>
-                <canvas id="satisfactionPromoChart" height="75"></canvas>
+                <div class="section-title"><i class="fa-solid fa-circle-info" style="color: #4A148C;"></i> Sumber Informasi Wisatawan</div>
+                <canvas id="sourceChart" height="110"></canvas>
             </div>
 
-            <div class="slogan-card">
-                <div class="slogan-item">
-                    <i class="fa-solid fa-bullseye"></i>
-                    <span class="slogan-text">Berbasis Data Tepat Sasaran</span>
-                </div>
-                <div class="slogan-item">
-                    <i class="fa-solid fa-handshake-angle"></i>
-                    <span class="slogan-text">Pariwisata Maju Masyarakat Sejahtera</span>
-                </div>
-            </div>
-
-            <div class="fade-img-container">
-                <img src="https://radartv.disway.id/upload/59c6804c4c660241d4c826c4a1f31924.jpg" alt="Semenanjung Badran">
-                <div class="fade-overlay">
-                    <span class="fade-text">🌿 Pesona Alam Badransari</span>
+            <div class="card-box">
+                <div class="section-title"><i class="fa-solid fa-ranking-star" style="color: #4A148C;"></i> Konten Terpopuler</div>
+                <div style="font-size: 8px; font-weight: 700; color: #444; display: flex; flex-direction: column; gap: 3px;">
+                    <div style="display: flex; justify-content: space-between; background: #F3E5F5; padding: 4px 6px; border-radius: 4px;"><span>1. Spot Foto & Panorama</span><span style="color: #4A148C;">35%</span></div>
+                    <div style="display: flex; justify-content: space-between; background: #FAFAFA; padding: 4px 6px; border-radius: 4px;"><span>2. Sunset & Pemandangan</span><span style="color: #4A148C;">25%</span></div>
+                    <div style="display: flex; justify-content: space-between; background: #FAFAFA; padding: 4px 6px; border-radius: 4px;"><span>3. Festival & Event Desa</span><span style="color: #4A148C;">20%</span></div>
                 </div>
             </div>
         </div>
@@ -408,23 +421,26 @@ dashboard_html = f"""
 
     <script>
         Chart.defaults.font.family = 'Inter';
-        Chart.defaults.font.size = 7.5;
+        Chart.defaults.font.size = 8;
         Chart.defaults.color = '#555';
 
+        // Tooltip informatif dengan konteks unit data
         const informativeTooltip = {{
             backgroundColor: 'rgba(15, 50, 85, 0.95)',
-            titleFont: {{ size: 8.5, weight: 'bold' }},
-            bodyFont: {{ size: 7.5 }},
-            padding: 5,
-            cornerRadius: 4,
+            titleFont: {{ size: 9, weight: 'bold' }},
+            bodyFont: {{ size: 8 }},
+            padding: 8,
+            cornerRadius: 6,
             displayColors: true,
             callbacks: {{
                 label: function(context) {{
                     let label = context.dataset.label || '';
-                    if (label) {{ label += ': '; }}
-                    if (context.parsed.y !== null && context.parsed.y !== undefined) {{
+                    if (label) {{
+                        label += ': ';
+                    }}
+                    if (context.parsed.y !== null) {{
                         label += context.parsed.y.toLocaleString('id-ID');
-                    }} else if (context.parsed !== null && context.parsed !== undefined) {{
+                    }} else if (context.parsed !== null) {{
                         label += context.parsed.toLocaleString('id-ID');
                     }}
                     return label;
@@ -434,9 +450,8 @@ dashboard_html = f"""
 
         const cf = {chart_factor};
 
-        // 1. Trend Chart
         const ctxTrend = document.getElementById('trendChart').getContext('2d');
-        const gradientTrend = ctxTrend.createLinearGradient(0, 0, 0, 75);
+        const gradientTrend = ctxTrend.createLinearGradient(0, 0, 0, 110);
         gradientTrend.addColorStop(0, 'rgba(46, 125, 50, 0.35)');
         gradientTrend.addColorStop(1, 'rgba(46, 125, 50, 0.0)');
 
@@ -452,105 +467,127 @@ dashboard_html = f"""
                     borderWidth: 2,
                     fill: true,
                     tension: 0.35,
-                    pointRadius: 1.5
+                    pointRadius: 2
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
-        // 2. Facility Chart
         new Chart(document.getElementById('facilityChart').getContext('2d'), {{
             type: 'bar',
             data: {{
-                labels: ['Gazebo', 'Spot Foto', 'Mushola', 'Toilet', 'Parkir', 'Kuliner'],
+                labels: ['Parkir', 'Toilet', 'Mushola', 'Gazebo', 'Spot Foto', 'Warung'],
                 datasets: [{{
                     label: 'Jumlah Unit',
-                    data: [12, 18, 4, 8, 10, 15].map(v => Math.round(v * cf)),
+                    data: [2, 4, 2, 6, 8, 12].map(v => Math.max(1, Math.round(v * (cf > 1 ? 1.2 : cf)))),
                     backgroundColor: '#2E7D32',
-                    borderRadius: 3
+                    borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
-        // 3. Revenue Chart
+        new Chart(document.getElementById('complaintChart').getContext('2d'), {{
+            type: 'bar',
+            data: {{
+                labels: ['Kebersihan', 'Jalan', 'Toilet', 'Parkir', 'Informasi'],
+                datasets: [{{
+                    label: 'Jumlah Keluhan',
+                    data: [28, 22, 20, 15, 9].map(v => Math.round(v * cf)),
+                    backgroundColor: '#388E3C',
+                    borderRadius: 4
+                }}]
+            }},
+            options: {{ indexAxis: 'y', responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ x: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, y: {{ grid: {{ display: false }} }} }} }}
+        }});
+
         new Chart(document.getElementById('revenueChart').getContext('2d'), {{
             type: 'bar',
             data: {{
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                labels: ['Tiket', 'Parkir', 'Sewa', 'Camping', 'UMKM'],
                 datasets: [{{
                     label: 'Pendapatan (Juta Rp)',
-                    data: [8.5, 9.2, 10.1, 14.5, 16.2, 18.8, 13.0, 14.2, 11.5, 11.0, 12.2, 17.5].map(v => +(v * cf).toFixed(1)),
+                    data: [68, 22, 18, 15, 28].map(v => parseFloat((v * cf).toFixed(1))),
                     backgroundColor: '#1565C0',
-                    borderRadius: 3
+                    borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
-        // 4. Expense Chart
         new Chart(document.getElementById('expenseChart').getContext('2d'), {{
             type: 'doughnut',
             data: {{
-                labels: ['Operasional', 'Perawatan', 'Pengembangan', 'Cadangan'],
+                labels: ['Kebersihan', 'Perawatan', 'Promosi', 'SDM', 'Infrastruktur'],
                 datasets: [{{
-                    data: [40, 25, 20, 15],
-                    backgroundColor: ['#1565C0', '#2E7D32', '#F57F17', '#4A148C']
+                    label: 'Persentase (%)',
+                    data: [30, 25, 15, 15, 15],
+                    backgroundColor: ['#1565C0', '#42A5F5', '#90CAF9', '#BBDEFB', '#E3F2FD'],
+                    borderWidth: 1
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ position: 'bottom', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }} }}
         }});
 
-        // 5. Source Chart
-        new Chart(document.getElementById('sourceChart').getContext('2d'), {{
-            type: 'pie',
+        new Chart(document.getElementById('originChart').getContext('2d'), {{
+            type: 'bar',
             data: {{
-                labels: ['Media Sosial', 'Rekomendasi', 'Website', 'Lainnya'],
+                labels: ['Lampung', 'Sumsel', 'DKI', 'Banten', 'Jabar'],
                 datasets: [{{
-                    data: [50, 25, 15, 10],
-                    backgroundColor: ['#4A148C', '#1565C0', '#2E7D32', '#F57F17']
+                    label: 'Persentase Asal (%)',
+                    data: [55, 17, 10, 7, 6],
+                    backgroundColor: '#4A148C',
+                    borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ position: 'bottom', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
-        // 6. Engagement Chart
+        new Chart(document.getElementById('promoChart').getContext('2d'), {{
+            type: 'bar',
+            data: {{
+                labels: ['Instagram', 'TikTok', 'Facebook', 'Website', 'YouTube'],
+                datasets: [{{
+                    label: 'Kontribusi Promosi (%)',
+                    data: [35, 25, 15, 15, 10],
+                    backgroundColor: '#7B1FA2',
+                    borderRadius: 4
+                }}]
+            }},
+            options: {{ indexAxis: 'y', responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ x: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, y: {{ grid: {{ display: false }} }} }} }}
+        }});
+
         new Chart(document.getElementById('engagementChart').getContext('2d'), {{
             type: 'line',
             data: {{
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-                datasets: [{{
-                    label: 'Engagement',
-                    data: [150, 180, 220, 350, 420, 500, 380, 400, 310, 290, 330, 480].map(v => Math.round(v * cf)),
-                    borderColor: '#4A148C',
-                    backgroundColor: 'rgba(74, 20, 140, 0.1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.35,
-                    pointRadius: 1.5
-                }}]
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                datasets: [
+                    {{ label: 'Likes', data: [1200, 1500, 1800, 2200, 2600, 3100].map(v => Math.round(v * cf)), borderColor: '#4A148C', borderWidth: 2, tension: 0.35, pointRadius: 2 }},
+                    {{ label: 'Comments', data: [400, 600, 700, 900, 1100, 1400].map(v => Math.round(v * cf)), borderColor: '#AB47BC', borderWidth: 2, tension: 0.35, pointRadius: 2 }}
+                ]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ position: 'top', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
-        // 7. Satisfaction Promo Chart
-        new Chart(document.getElementById('satisfactionPromoChart').getContext('2d'), {{
-            type: 'bar',
+        new Chart(document.getElementById('sourceChart').getContext('2d'), {{
+            type: 'doughnut',
             data: {{
-                labels: ['Sangat Puas', 'Puas', 'Cukup', 'Kurang'],
+                labels: ['Media Sosial', 'Teman/Keluarga', 'Google', 'Website', 'Banner'],
                 datasets: [{{
-                    label: 'Responden',
-                    data: [85, 45, 15, 5].map(v => Math.round(v * cf)),
-                    backgroundColor: '#F57F17',
-                    borderRadius: 3
+                    label: 'Proporsi (%)',
+                    data: [45, 25, 15, 10, 5],
+                    backgroundColor: ['#4A148C', '#7B1FA2', '#AB47BC', '#CE93D8', '#F3E5F5'],
+                    borderWidth: 1
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }} }}
         }});
     </script>
 </body>
 </html>
 """
 
-# Render ke dalam Streamlit dengan tinggi yang pas (840px) tanpa jeda kosong ke bawah
-st.components.v1.html(dashboard_html, height=840, scrolling=False)
+# Render ke dalam Streamlit Component
+import streamlit.components.v1 as components
+components.html(dashboard_html, height=1380, scrolling=True)
+
