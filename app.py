@@ -60,7 +60,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Sidebar Filter Data & Gambar Kiri Atas dengan Gradasi (Teks Pengabdian Dihapus)
+# 3. Sidebar Filter Data & Gambar Kiri Atas dengan Gradasi
 st.sidebar.markdown("""
     <div style="position: relative; text-align: center; border-radius: 8px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
         <img src="https://i.ytimg.com/vi/8PHHFvzMDac/maxresdefault.jpg" style="width: 100%; height: 130px; object-fit: cover; display: block;">
@@ -192,7 +192,6 @@ dashboard_html = f"""
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }}
         .logo-area {{ display: flex; align-items: center; gap: 14px; }}
-        .logo-badge {{ background: white; color: #0F3255; font-weight: 800; font-size: 11px; padding: 6px 10px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
         .title-area h1 {{ font-size: 17px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; color: #FFD700; }}
         .title-area p {{ font-size: 11px; font-weight: 600; margin: 3px 0 0 0; color: #E0E0E0; }}
         
@@ -253,8 +252,6 @@ dashboard_html = f"""
 
     <div class="top-banner">
         <div class="logo-area">
-            <div class="logo-badge">ITERA</div>
-            <div class="logo-badge" style="background: #2E7D32; color: white;">KKN ITERA</div>
             <div class="title-area">
                 <h1>Smart Tourism Dashboard — Desa Badransari</h1>
                 <p>Kecamatan Punggur, Kabupaten Lampung Tengah</p>
@@ -324,6 +321,20 @@ dashboard_html = f"""
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-triangle-exclamation" style="color: #2E7D32;"></i> Keluhan Wisatawan</div>
                 <canvas id="complaintChart" height="115"></canvas>
+            </div>
+
+            <div class="card-box">
+                <div class="section-title"><i class="fa-solid fa-images" style="color: #2E7D32;"></i> Keindahan Semenanjung Badran</div>
+                <div style="position: relative; overflow: hidden; border-radius: 6px; height: 160px;">
+                    <div id="carouselSlides" style="display: flex; transition: transform 0.4s ease-in-out; height: 100%;">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzLiEBWTG_wG6AKrTAWj86DqjfI5IvUm8BD0Ji5mhclWEC8uguyFfGCQfF&s=10" style="width: 100%; height: 100%; object-fit: cover; flex-shrink: 0;">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnqCV6hftdg7YMrMpsJI0N_3VaX0mI1sIDuX-gIi82LkSvks9RTyA7gJg&s=10" style="width: 100%; height: 100%; object-fit: cover; flex-shrink: 0;">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8weTv8xm9MnaCyFb6x05l11VxYjj8kKBmpCvEO7J7dC6w8KVGspk9XiI&s=10" style="width: 100%; height: 100%; object-fit: cover; flex-shrink: 0;">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQw8btagLJ3nP18pBdJHEJgPhf2Bi16EmR7Mj09LeZRiQ&s" style="width: 100%; height: 100%; object-fit: cover; flex-shrink: 0;">
+                    </div>
+                    <button onclick="prevSlide()" style="position: absolute; top: 50%; left: 6px; transform: translateY(-50%); background: rgba(15,50,85,0.7); color: white; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; z-index: 10;">❮</button>
+                    <button onclick="nextSlide()" style="position: absolute; top: 50%; right: 6px; transform: translateY(-50%); background: rgba(15,50,85,0.7); color: white; border: none; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 12px; display: flex; align-items: center; justify-content: center; z-index: 10;">❯</button>
+                </div>
             </div>
         </div>
 
@@ -456,10 +467,12 @@ dashboard_html = f"""
                     if (label) {{
                         label += ': ';
                     }}
-                    if (context.parsed.y !== null) {{
-                        label += context.parsed.y.toLocaleString('id-ID');
-                    }} else if (context.parsed !== null) {{
-                        label += context.parsed.toLocaleString('id-ID');
+                    let val = context.parsed.y;
+                    if (context.chart.options.indexAxis === 'y') {{
+                        val = context.parsed.x;
+                    }}
+                    if (val !== null && val !== undefined) {{
+                        label += val.toLocaleString('id-ID');
                     }}
                     return label;
                 }}
@@ -467,6 +480,16 @@ dashboard_html = f"""
         }};
 
         const cf = {chart_factor};
+
+        let currentSlideIdx = 0;
+        function showSlide(idx) {{
+            const slides = document.getElementById('carouselSlides');
+            currentSlideIdx = (idx + 4) % 4;
+            if(slides) slides.style.transform = `translateX(-${{currentSlideIdx * 100}}%)`;
+        }}
+        function nextSlide() {{ showSlide(currentSlideIdx + 1); }}
+        function prevSlide() {{ showSlide(currentSlideIdx - 1); }}
+        setInterval(nextSlide, 3500);
 
         const ctxTrend = document.getElementById('trendChart').getContext('2d');
         const gradientTrend = ctxTrend.createLinearGradient(0, 0, 0, 115);
@@ -536,15 +559,32 @@ dashboard_html = f"""
         new Chart(document.getElementById('expenseChart').getContext('2d'), {{
             type: 'doughnut',
             data: {{
-                labels: ['Kebersihan', 'Perawatan', 'Promosi', 'SDM', 'Infrastruktur'],
+                labels: ['Kebersihan (30%)', 'Perawatan (25%)', 'Promosi (15%)', 'SDM (15%)', 'Infrastruktur (15%)'],
                 datasets: [{{
-                    label: 'Persentase (%)',
+                    label: 'Persentase',
                     data: [30, 25, 15, 15, 15],
                     backgroundColor: ['#1565C0', '#42A5F5', '#90CAF9', '#BBDEFB', '#E3F2FD'],
                     borderWidth: 1
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 8, font: {{ size: 8 }} }} }}, tooltip: informativeTooltip }} }}
+            options: {{
+                responsive: true,
+                plugins: {{
+                    legend: {{ position: 'right', labels: {{ boxWidth: 8, font: {{ size: 8 }} }} }},
+                    tooltip: {{
+                        backgroundColor: 'rgba(15, 50, 85, 0.95)',
+                        titleFont: {{ size: 10, weight: 'bold' }},
+                        bodyFont: {{ size: 9 }},
+                        padding: 8,
+                        cornerRadius: 6,
+                        callbacks: {{
+                            label: function(context) {{
+                                return context.label + ': ' + context.parsed + '%';
+                            }}
+                        }}
+                    }}
+                }}
+            }}
         }});
 
         new Chart(document.getElementById('originChart').getContext('2d'), {{
@@ -606,4 +646,4 @@ dashboard_html = f"""
 </html>
 """
 
-components.html(dashboard_html, height=1450, scrolling=True)
+components.html(dashboard_html, height=1650, scrolling=True)
