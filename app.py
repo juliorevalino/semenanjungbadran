@@ -17,8 +17,8 @@ st.set_page_config(
 st.markdown("""
     <style>
     .block-container {
-        padding-top: 1.5rem !important;
-        padding-bottom: 0rem !important;
+        padding-top: 3.5rem !important; /* Ditambah agar tidak tertutup menu bawaan Streamlit */
+        padding-bottom: 2rem !important;
         padding-left: 0.8rem !important;
         padding-right: 0.8rem !important;
         max-width: 100% !important;
@@ -187,7 +187,7 @@ dashboard_html = f"""
         html, body {{ 
             background-color: #F0F4F8; 
             margin: 0; 
-            padding: 0; 
+            padding: 0 0 40px 0; /* Memberi ruang di paling bawah */
             width: 100%; 
             max-width: 100%;
             overflow-x: hidden; 
@@ -211,24 +211,25 @@ dashboard_html = f"""
 
         .three-column-grid {{ 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
+            grid-template-columns: repeat(3, minmax(0, 1fr)); /* minmax(0, 1fr) mencegah elemen meluap secara horizontal */
             gap: 10px; 
             margin-bottom: 10px; 
             width: 100%;
         }}
-        .column-box {{ display: flex; flex-direction: column; gap: 10px; width: 100%; }}
+        .column-box {{ display: flex; flex-direction: column; gap: 10px; width: 100%; min-width: 0; }}
         
-        .card-box {{ background: white; border-radius: 8px; padding: 10px 12px; border: 1px solid #E0E0E0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); width: 100%; }}
-        
+        .card-box {{ background: white; border-radius: 8px; padding: 10px 12px; border: 1px solid #E0E0E0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); width: 100%; overflow: hidden; }}
+        canvas {{ max-width: 100% !important; }}
+
         .col-header {{ padding: 8px 12px; border-radius: 6px; font-weight: 800; color: white; font-size: 11px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }}
         .bg-green {{ background: #2E7D32; }}
         .bg-blue {{ background: #1565C0; }}
         .bg-purple {{ background: #4A148C; }}
 
-        .metric-subgrid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }}
-        .m-card {{ background: #FAFAFA; border-radius: 6px; padding: 6px 4px; border: 1px solid #EAEAEA; text-align: center; height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; }}
+        .metric-subgrid {{ display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }}
+        .m-card {{ background: #FAFAFA; border-radius: 6px; padding: 6px 4px; border: 1px solid #EAEAEA; text-align: center; height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-width: 0; }}
         .m-icon {{ font-size: 11px; margin-bottom: 3px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }}
-        .m-title {{ font-size: 7.5px; font-weight: 800; color: #555; text-transform: uppercase; line-height: 1.2; width: 100%; }}
+        .m-title {{ font-size: 7.5px; font-weight: 800; color: #555; text-transform: uppercase; line-height: 1.2; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }}
         .m-value {{ font-size: 12px; font-weight: 800; color: #111; margin: 2px 0; }}
         .m-sub {{ font-size: 7px; font-weight: 700; color: #777; }}
 
@@ -269,7 +270,7 @@ dashboard_html = f"""
         .rating-bar-bg {{ flex-grow: 1; background: #E0E0E0; height: 5px; border-radius: 3px; overflow: hidden; }}
         .rating-bar-fill {{ background: #7B1FA2; height: 100%; border-radius: 3px; }}
 
-        /* Footer Banner Banner Baru dengan Motif / Ilustrasi Siger Lampung */
+        /* Footer Banner Slogan */
         .footer-banner {{ 
             background: linear-gradient(135deg, #0B2540 0%, #0F3255 50%, #1A4975 100%); 
             border: 2px solid #FFD700;
@@ -280,6 +281,7 @@ dashboard_html = f"""
             align-items: center;
             justify-content: space-between;
             margin-top: 5px;
+            margin-bottom: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             width: 100%;
         }}
@@ -486,7 +488,6 @@ dashboard_html = f"""
                 </div>
             </div>
 
-            <!-- BAGIAN KANAN BAWAH BARU: TINGKAT KEPUASAN PROMOSI -->
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-face-smile-beam" style="color: #4A148C;"></i> Tingkat Kepuasan Promosi</div>
                 <div class="rating-summary-box">
@@ -526,7 +527,7 @@ dashboard_html = f"""
 
     </div>
 
-    <!-- FOOTER SLOGAN DENGAN DESAIN KHAS & ILUSTRASI SIGER LAMPUNG -->
+    <!-- FOOTER SLOGAN SIGER LAMPUNG -->
     <div class="footer-banner">
         <div class="siger-container">
             <svg viewBox="0 0 120 60" width="48" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -754,5 +755,5 @@ dashboard_html = f"""
 </html>
 """
 
-# Pengaturan tinggi persis sesuai kontainer agar pas dan tidak ada sisa ruang kosong di bawah slogan
-components.html(dashboard_html, height=1380, scrolling=False)
+# Pengaturan tinggi disesuaikan agar bisa di-scroll dengan mulus sampai banner bawah terlihat utuh
+components.html(dashboard_html, height=1550, scrolling=True)
