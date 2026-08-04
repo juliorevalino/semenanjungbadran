@@ -17,7 +17,7 @@ st.set_page_config(
 st.markdown("""
     <style>
     .block-container {
-        padding-top: 3.5rem !important; /* Ditambah agar tidak tertutup menu bawaan Streamlit */
+        padding-top: 3.5rem !important; /* Agar tidak tertutup menu bawaan Streamlit */
         padding-bottom: 2rem !important;
         padding-left: 0.8rem !important;
         padding-right: 0.8rem !important;
@@ -60,7 +60,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Sidebar Filter Data & Gambar Kiri Atas dengan Gradasi
+# 3. Sidebar Filter Data & Gambar Kiri Atas
 st.sidebar.markdown("""
     <div style="position: relative; text-align: center; border-radius: 8px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.3);">
         <img src="https://i.ytimg.com/vi/8PHHFvzMDac/maxresdefault.jpg" style="width: 100%; height: 130px; object-fit: cover; display: block;">
@@ -87,7 +87,7 @@ st.sidebar.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Faktor Kalkulasi Data Berdasarkan Filter
+# Kalkulasi Faktor Data
 year_factor = 1.0
 if filter_tahun == "2024":
     year_factor = 0.88
@@ -187,7 +187,7 @@ dashboard_html = f"""
         html, body {{ 
             background-color: #F0F4F8; 
             margin: 0; 
-            padding: 0 0 40px 0; /* Memberi ruang di paling bawah */
+            padding: 0 0 40px 0; 
             width: 100%; 
             max-width: 100%;
             overflow-x: hidden; 
@@ -211,7 +211,7 @@ dashboard_html = f"""
 
         .three-column-grid {{ 
             display: grid; 
-            grid-template-columns: repeat(3, minmax(0, 1fr)); /* minmax(0, 1fr) mencegah elemen meluap secara horizontal */
+            grid-template-columns: repeat(3, minmax(0, 1fr)); 
             gap: 10px; 
             margin-bottom: 10px; 
             width: 100%;
@@ -270,12 +270,12 @@ dashboard_html = f"""
         .rating-bar-bg {{ flex-grow: 1; background: #E0E0E0; height: 5px; border-radius: 3px; overflow: hidden; }}
         .rating-bar-fill {{ background: #7B1FA2; height: 100%; border-radius: 3px; }}
 
-        /* Footer Banner Slogan */
+        /* Footer Banner Slogan & Siger */
         .footer-banner {{ 
             background: linear-gradient(135deg, #0B2540 0%, #0F3255 50%, #1A4975 100%); 
             border: 2px solid #FFD700;
             color: white; 
-            padding: 12px 20px; 
+            padding: 10px 18px; 
             border-radius: 8px; 
             display: flex;
             align-items: center;
@@ -285,7 +285,19 @@ dashboard_html = f"""
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             width: 100%;
         }}
-        .siger-container {{ display: flex; align-items: center; justify-content: center; opacity: 0.95; }}
+        .siger-img-box {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }}
+        .siger-img {{
+            height: 48px;
+            width: 70px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1.5px solid #FFD700;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }}
         .slogan-content {{ text-align: center; flex-grow: 1; padding: 0 15px; }}
         .slogan-title {{ font-size: 12px; font-weight: 800; color: #FFD700; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 3px; }}
         .slogan-text {{ font-size: 10px; font-weight: 600; color: #F0F4F8; font-style: italic; letter-spacing: 0.3px; }}
@@ -527,33 +539,17 @@ dashboard_html = f"""
 
     </div>
 
-    <!-- FOOTER SLOGAN SIGER LAMPUNG -->
+    <!-- FOOTER SLOGAN SIGER LAMPUNG (Sesuai Referensi Gambar Traverse) -->
     <div class="footer-banner">
-        <div class="siger-container">
-            <svg viewBox="0 0 120 60" width="48" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M60 4 L64 22 L72 9 L74 25 L84 15 L83 28 L94 22 L92 33 L103 29 L98 42 L22 42 L17 29 L28 33 L26 22 L37 28 L36 15 L46 25 L48 9 L56 22 Z" fill="#FFD700" stroke="#DAA520" stroke-width="1.5"/>
-                <path d="M24 45 H96 V48 H24 Z" fill="#FFD700"/>
-                <circle cx="60" cy="12" r="2" fill="#FFF"/>
-                <circle cx="48" cy="16" r="1.5" fill="#FFF"/>
-                <circle cx="72" cy="16" r="1.5" fill="#FFF"/>
-                <circle cx="36" cy="21" r="1.5" fill="#FFF"/>
-                <circle cx="84" cy="21" r="1.5" fill="#FFF"/>
-            </svg>
+        <div class="siger-img-box">
+            <img class="siger-img" src="https://traverse.id/wp-content/uploads/2018/03/Mahkota-Siger-Simbol-Kebanggaan-Lampung.jpg" alt="Mahkota Siger Lampung">
         </div>
         <div class="slogan-content">
             <div class="slogan-title">Desa Wisata Semenanjung Badran</div>
             <div class="slogan-text">“Bersama Membangun Pariwisata Desa Badransari yang Berkelanjutan, Berdaya Saing, dan Berbasis Masyarakat”</div>
         </div>
-        <div class="siger-container">
-            <svg viewBox="0 0 120 60" width="48" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M60 4 L64 22 L72 9 L74 25 L84 15 L83 28 L94 22 L92 33 L103 29 L98 42 L22 42 L17 29 L28 33 L26 22 L37 28 L36 15 L46 25 L48 9 L56 22 Z" fill="#FFD700" stroke="#DAA520" stroke-width="1.5"/>
-                <path d="M24 45 H96 V48 H24 Z" fill="#FFD700"/>
-                <circle cx="60" cy="12" r="2" fill="#FFF"/>
-                <circle cx="48" cy="16" r="1.5" fill="#FFF"/>
-                <circle cx="72" cy="16" r="1.5" fill="#FFF"/>
-                <circle cx="36" cy="21" r="1.5" fill="#FFF"/>
-                <circle cx="84" cy="21" r="1.5" fill="#FFF"/>
-            </svg>
+        <div class="siger-img-box">
+            <img class="siger-img" src="https://traverse.id/wp-content/uploads/2018/03/Mahkota-Siger-Simbol-Kebanggaan-Lampung.jpg" alt="Mahkota Siger Lampung">
         </div>
     </div>
 
@@ -755,5 +751,4 @@ dashboard_html = f"""
 </html>
 """
 
-# Pengaturan tinggi disesuaikan agar bisa di-scroll dengan mulus sampai banner bawah terlihat utuh
 components.html(dashboard_html, height=1550, scrolling=True)
