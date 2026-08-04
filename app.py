@@ -62,7 +62,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Sidebar Filter Data (Lengkap & Scrollable)
+# 3. Sidebar Filter Data (Sesuai Permintaan: Tahun, Bulan, Jenis Wisatawan, Jenis Wisata)
 st.sidebar.markdown("""
     <div class="sidebar-title">
         <h3>Hibah BIMA Semenanjung Badran ITERA</h3>
@@ -74,10 +74,7 @@ st.sidebar.markdown('### <i class="fa-solid fa-filter"></i> FILTER DATA', unsafe
 filter_tahun = st.sidebar.selectbox("📅 Tahun", ["2024", "2025", "2026"])
 filter_bulan = st.sidebar.selectbox("🕒 Bulan", ["Semua", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"])
 filter_jenis_wisatawan = st.sidebar.selectbox("👥 Jenis Wisatawan", ["Semua", "Lampung", "Luar Lampung"])
-filter_asal = st.sidebar.selectbox("📍 Asal Daerah", ["Semua", "Lampung Tengah", "Bandar Lampung", "Luar Lampung"])
 filter_jenis = st.sidebar.selectbox("⛰️ Jenis Wisata", ["Semua", "Wisata Alam", "Wisata Edukasi", "Kuliner & Outbound"])
-filter_event = st.sidebar.selectbox("📅 Event Desa", ["Semua", "Festival Desa", "Pasar UMKM", "Lomba Perahu", "Camping Ceria"])
-filter_usia = st.sidebar.selectbox("👶 Kelompok Usia", ["Semua", "Anak-anak", "Remaja", "Dewasa", "Lansia"])
 
 st.sidebar.markdown("<br>", unsafe_allow_html=True)
 st.sidebar.markdown("""
@@ -170,7 +167,7 @@ dashboard_html = f"""
         .flow-node.purple {{ background: #EDE7F6; border-color: #4A148C; color: #311B92; }}
         .flow-arrow {{ font-size: 9px; color: #666; margin: -2px 0; }}
 
-        /* Keterlibatan Masyarakat dengan Ilustrasi Orang & Progress Bar */
+        /* Keterlibatan Masyarakat dengan Ilustrasi Orang & Progress */
         .community-box {{ display: flex; align-items: center; gap: 12px; background: #E8F5E9; padding: 8px 10px; border-radius: 8px; border: 1px solid #C8E6C9; }}
         .community-icons-group {{ display: flex; gap: 3px; color: #2E7D32; font-size: 14px; background: white; padding: 6px 8px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }}
         .community-info {{ flex-grow: 1; }}
@@ -220,7 +217,7 @@ dashboard_html = f"""
     <!-- STRUKTUR UTAMA: 3 KOLOM SESUAI REFERENSI -->
     <div class="three-column-grid">
         
-        <!-- ================= KOLSOM 1: LAYANAN PARIWISATA ================= -->
+        <!-- ================= KOLOM 1: LAYANAN PARIWISATA ================= -->
         <div class="column-box">
             
             <!-- Metric Grid 1 -->
@@ -263,6 +260,13 @@ dashboard_html = f"""
                 </div>
             </div>
 
+            <!-- Google Maps Lokasi Semenanjung Badran -->
+            <div class="card-box">
+                <div class="section-title"><i class="fa-solid fa-map-location-dot" style="color: #2E7D32;"></i> Lokasi Semenanjung Badran</div>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.6!2d105.2!3d-5.1!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMDYnMDAnUzEwNcKwMTInMDAuMCJF!5e0!3m2!1sid!2sid!4v1650000000000!5m2!1sid!2sid" 
+                        width="100%" height="130" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+
             <!-- Keluhan Wisatawan -->
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-triangle-exclamation" style="color: #2E7D32;"></i> Keluhan Wisatawan</div>
@@ -301,7 +305,7 @@ dashboard_html = f"""
                 </div>
             </div>
 
-            <!-- Jadwal Event Desa -->
+            <!-- Jadwal Event Desa (Dikembalikan ke Dashboard) -->
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-calendar-days" style="color: #1565C0;"></i> Jadwal Event Tahun Ini</div>
                 <div class="event-list">
@@ -533,4 +537,4 @@ dashboard_html = f"""
 
 # Render ke dalam Streamlit Component
 import streamlit.components.v1 as components
-components.html(dashboard_html, height=1850, scrolling=True)
+components.html(dashboard_html, height=1920, scrolling=True)
