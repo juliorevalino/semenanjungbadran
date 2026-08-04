@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 import warnings
+import streamlit.components.v1 as components
 warnings.filterwarnings('ignore')
 
 # 1. Konfigurasi Halaman (Wide Layout & Clean Padding)
@@ -12,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. Styling CSS untuk Konsistensi Tampilan (Padding atas disesuaikan agar tidak terpotong & font lebih besar/enak dibaca)
+# 2. Styling CSS untuk Sidebar & Konsistensi Tampilan
 st.markdown("""
     <style>
     .block-container {
@@ -87,13 +88,7 @@ st.sidebar.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# ==========================================
-# PEMISAHAN LOGIKA: 
-# 1. year_factor (Hanya untuk bagian atas, followers, pokdarwis, dll)
-# 2. chart_factor (Untuk chart/grafik di bawah, bergantung semua filter)
-# ==========================================
-
-# 1. Faktor Khusus Tahun (Bagian Atas & Metrik Utama)
+# Faktor Kalkulasi Data Berdasarkan Filter
 year_factor = 1.0
 if filter_tahun == "2024":
     year_factor = 0.88
@@ -102,15 +97,13 @@ elif filter_tahun == "2025":
 elif filter_tahun == "2026":
     year_factor = 1.25
 elif filter_tahun == "Semua":
-    year_factor = 2.45  # Akumulasi total seluruh tahun
+    year_factor = 2.45
 
-# Metrik Atas & Manajemen (Hanya Berdasarkan Tahun)
 total_pengunjung = int(4922 * year_factor)
 pendapatan_total = round(152.7 * year_factor, 1)
 pengunjung_hari_ini = int(176 * (1.1 if filter_tahun != "Semua" else 1.5))
 tiket_val = round(78.4 * year_factor, 1)
 
-# Manajemen (Pokdarwis, Pengelola, UMKM, dll - Berdasarkan Tahun)
 pokdarwis_val = 3 if filter_tahun != "Semua" else 5
 pengelola_val = int(27 * year_factor)
 umkm_aktif_val = int(42 * year_factor)
@@ -118,14 +111,12 @@ event_val = 8 if filter_tahun != "Semua" else 14
 mitra_val = int(12 * year_factor)
 relawan_val = int(36 * year_factor)
 
-# Followers & Media Sosial (Berbasis Tahun)
 ig_followers_val = f"{int(3842 * year_factor):,}".replace(",", ".")
 tiktok_val = f"{int(2156 * year_factor):,}".replace(",", ".")
 fb_reach_val = f"{int(8745 * year_factor):,}".replace(",", ".")
 website_val = f"{int(5231 * year_factor):,}".replace(",", ".")
 review_val = int(157 * year_factor)
 
-# 2. Faktor Lengkap untuk Grafik/Chart di Bawah (Bergantung Semua Filter)
 chart_factor = year_factor
 if filter_bulan != "Semua": 
     chart_factor *= 0.12
@@ -150,7 +141,6 @@ elif filter_jenis == "Kuliner & Outbound":
 
 chart_factor = max(chart_factor, 0.15)
 
-# Dinamis Jadwal Event Berdasarkan Filter Tahun
 events_data = {
     "2024": [
         ("14 Jan", "Festival Desa Badransari"),
@@ -184,7 +174,6 @@ events_data = {
 current_events = events_data.get(filter_tahun, events_data["Semua"])
 event_html_items = "".join([f'<div class="event-item"><span class="event-date">{date}</span><span class="event-name">{name}</span></div>' for date, name in current_events])
 
-# 4. Konten HTML/CSS Dashboard
 dashboard_html = f"""
 <!DOCTYPE html>
 <html lang="id">
@@ -263,14 +252,13 @@ dashboard_html = f"""
 </head>
 <body>
 
-    <!-- Banner Atas -->
     <div class="top-banner">
         <div class="logo-area">
             <div class="logo-badge">ITERA</div>
             <div class="logo-badge" style="background: #2E7D32; color: white;">KKN ITERA</div>
             <div class="title-area">
                 <h1>Smart Tourism Dashboard — Desa Badransari</h1>
-                <p>Kecamatan Punggur, Kabupaten Lampung Tengah </p>
+                <p>Kecamatan Punggur, Kabupaten Lampung Tengah</p>
             </div>
         </div>
         <div class="stats-group">
@@ -289,10 +277,8 @@ dashboard_html = f"""
         </div>
     </div>
 
-    <!-- STRUKTUR UTAMA: 3 KOLOM -->
     <div class="three-column-grid">
         
-        <!-- KOLOM 1: LAYANAN PARIWISATA -->
         <div class="column-box">
             <div class="card-box">
                 <div class="col-header bg-green"><i class="fa-solid fa-umbrella-beach"></i> 1. Layanan Pariwisata</div>
@@ -342,7 +328,6 @@ dashboard_html = f"""
             </div>
         </div>
 
-        <!-- KOLOM 2: MANAJEMEN PARIWISATA -->
         <div class="column-box">
             <div class="card-box">
                 <div class="col-header bg-blue"><i class="fa-solid fa-gear"></i> 2. Manajemen Pariwisata</div>
@@ -405,7 +390,6 @@ dashboard_html = f"""
             </div>
         </div>
 
-        <!-- KOLOM 3: PEMASARAN PARIWISATA -->
         <div class="column-box">
             <div class="card-box">
                 <div class="col-header bg-purple"><i class="fa-solid fa-bullhorn"></i> 3. Pemasaran Pariwisata</div>
@@ -451,7 +435,6 @@ dashboard_html = f"""
 
     </div>
 
-    <!-- Banner Footer Slogan -->
     <div class="footer-banner">
         “Bersama Membangun Pariwisata Desa Badransari yang Berkelanjutan, Berdaya Saing, dan Berbasis Masyarakat”
     </div>
@@ -624,4 +607,4 @@ dashboard_html = f"""
 </html>
 """
 
-st.markdown(dashboard_html, unsafe_allow_html=True)
+components.html(dashboard_html, height=1450, scrolling=True)
