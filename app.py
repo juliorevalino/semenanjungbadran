@@ -16,10 +16,10 @@ st.set_page_config(
 st.markdown("""
     <style>
     .block-container {
-        padding-top: 0.5rem !important;
-        padding-bottom: 0.5rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+        padding-top: 0.3rem !important;
+        padding-bottom: 0.3rem !important;
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
         max-width: 100% !important;
         overflow-x: hidden !important;
     }
@@ -39,22 +39,22 @@ st.markdown("""
     
     .sidebar-title {
         text-align: center; 
-        padding: 5px 0 10px 0; 
+        padding: 4px 0 8px 0; 
         border-bottom: 1px solid rgba(255,255,255,0.2); 
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
     .sidebar-title h3 {
         color: #FFD700 !important; 
-        font-size: 13px; 
+        font-size: 12px; 
         font-weight: 800; 
         margin: 0; 
-        line-height: 1.4; 
+        line-height: 1.3; 
         text-transform: uppercase;
     }
     .sidebar-title p { 
         color: #E0E0E0 !important; 
-        font-size: 9px; 
-        margin: 3px 0 0 0; 
+        font-size: 8.5px; 
+        margin: 2px 0 0 0; 
     }
     iframe { border: none; border-radius: 6px; }
     </style>
@@ -137,7 +137,7 @@ elif filter_jenis == "Kuliner & Outbound":
 chart_factor = max(chart_factor, 0.15)
 keterlibatan_masyarakat_val = int(78 * min(chart_factor, 1.2))
 
-# 4. Konten HTML/CSS Dashboard (Optimized Height & Balanced Fit)
+# 4. Konten HTML/CSS Dashboard (Precise Compact Height & Balanced Fit)
 dashboard_html = f"""
 <!DOCTYPE html>
 <html lang="id">
@@ -148,75 +148,75 @@ dashboard_html = f"""
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {{ font-family: 'Inter', sans-serif; box-sizing: border-box; }}
-        body {{ background-color: #F0F4F8; margin: 0; padding: 0; overflow-x: hidden; }}
+        body {{ background-color: #F0F4F8; margin: 0; padding: 0; overflow: hidden; }}
         
         .top-banner {{
             background: linear-gradient(rgba(15, 50, 85, 0.9), rgba(15, 50, 85, 0.8)), 
                         url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2000&auto=format&fit=crop') center/cover;
-            padding: 10px 16px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: white;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            padding: 8px 12px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }}
-        .logo-area {{ display: flex; align-items: center; gap: 10px; }}
-        .logo-badge {{ background: white; color: #0F3255; font-weight: 800; font-size: 9.5px; padding: 4px 7px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }}
-        .title-area h1 {{ font-size: 14px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; color: #FFD700; }}
-        .title-area p {{ font-size: 8.5px; font-weight: 600; margin: 2px 0 0 0; color: #E0E0E0; }}
+        .logo-area {{ display: flex; align-items: center; gap: 8px; }}
+        .logo-badge {{ background: white; color: #0F3255; font-weight: 800; font-size: 9px; padding: 3px 6px; border-radius: 3px; }}
+        .title-area h1 {{ font-size: 13px; font-weight: 800; margin: 0; text-transform: uppercase; color: #FFD700; }}
+        .title-area p {{ font-size: 8px; font-weight: 600; margin: 1px 0 0 0; color: #E0E0E0; }}
         
-        .stats-group {{ display: flex; gap: 8px; }}
-        .stat-item {{ background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.3); padding: 4px 8px; border-radius: 5px; text-align: center; }}
-        .stat-item span {{ display: block; font-size: 6.5px; font-weight: 700; color: #FFD700; text-transform: uppercase; }}
-        .stat-item strong {{ font-size: 10.5px; font-weight: 800; color: white; }}
+        .stats-group {{ display: flex; gap: 6px; }}
+        .stat-item {{ background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255,255,255,0.3); padding: 3px 6px; border-radius: 4px; text-align: center; }}
+        .stat-item span {{ display: block; font-size: 6px; font-weight: 700; color: #FFD700; text-transform: uppercase; }}
+        .stat-item strong {{ font-size: 9.5px; font-weight: 800; color: white; }}
 
-        .three-column-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 6px; width: 100%; }}
-        .column-box {{ display: flex; flex-direction: column; gap: 8px; min-width: 0; }}
+        .three-column-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 4px; width: 100%; }}
+        .column-box {{ display: flex; flex-direction: column; gap: 5px; min-width: 0; }}
         
-        .card-box {{ background: white; border-radius: 6px; padding: 8px 10px; border: 1px solid #E0E0E0; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }}
+        .card-box {{ background: white; border-radius: 5px; padding: 6px 8px; border: 1px solid #E0E0E0; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }}
         
-        .col-header {{ padding: 6px 10px; border-radius: 5px; font-weight: 800; color: white; font-size: 9.5px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px; }}
+        .col-header {{ padding: 5px 8px; border-radius: 4px; font-weight: 800; color: white; font-size: 9px; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; text-transform: uppercase; }}
         .bg-green {{ background: #2E7D32; }}
         .bg-blue {{ background: #1565C0; }}
         .bg-purple {{ background: #4A148C; }}
 
-        .metric-subgrid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }}
-        .m-card {{ background: #FAFAFA; border-radius: 5px; padding: 4px 3px; border: 1px solid #EAEAEA; text-align: center; height: 62px; display: flex; flex-direction: column; justify-content: center; align-items: center; }}
-        .m-icon {{ font-size: 9px; margin-bottom: 1px; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }}
-        .m-title {{ font-size: 6px; font-weight: 800; color: #555; text-transform: uppercase; line-height: 1.1; width: 100%; }}
-        .m-value {{ font-size: 10px; font-weight: 800; color: #111; margin: 1px 0; }}
-        .m-sub {{ font-size: 6px; font-weight: 700; color: #777; }}
+        .metric-subgrid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }}
+        .m-card {{ background: #FAFAFA; border-radius: 4px; padding: 3px 2px; border: 1px solid #EAEAEA; text-align: center; height: 50px; display: flex; flex-direction: column; justify-content: center; align-items: center; }}
+        .m-icon {{ font-size: 8px; margin-bottom: 1px; width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }}
+        .m-title {{ font-size: 5.5px; font-weight: 800; color: #555; text-transform: uppercase; line-height: 1.1; width: 100%; }}
+        .m-value {{ font-size: 9px; font-weight: 800; color: #111; margin: 1px 0; }}
+        .m-sub {{ font-size: 5.5px; font-weight: 700; color: #777; }}
 
-        .section-title {{ font-size: 9px; font-weight: 800; color: #333; margin-bottom: 5px; display: flex; align-items: center; gap: 5px; text-transform: uppercase; border-bottom: 2px solid #F0F0F0; padding-bottom: 3px; }}
+        .section-title {{ font-size: 8px; font-weight: 800; color: #333; margin-bottom: 3px; display: flex; align-items: center; gap: 4px; text-transform: uppercase; border-bottom: 1.5px solid #F0F0F0; padding-bottom: 2px; }}
 
-        .proportion-container {{ margin-top: 4px; }}
-        .proportion-bar-wrapper {{ display: flex; height: 16px; border-radius: 5px; overflow: hidden; background: #eee; margin: 4px 0; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }}
-        .prop-segment-1 {{ background: #2E7D32; width: {lampung_prop}%; display: flex; align-items: center; justify-content: center; color: white; font-size: 7.5px; font-weight: 800; white-space: nowrap; overflow: hidden; }}
-        .prop-segment-2 {{ background: #1565C0; width: {luar_prop}%; display: flex; align-items: center; justify-content: center; color: white; font-size: 7.5px; font-weight: 800; white-space: nowrap; overflow: hidden; }}
-        .prop-legend {{ display: flex; justify-content: space-between; font-size: 7.5px; font-weight: 700; color: #555; }}
+        .proportion-container {{ margin-top: 2px; }}
+        .proportion-bar-wrapper {{ display: flex; height: 14px; border-radius: 4px; overflow: hidden; background: #eee; margin: 3px 0; }}
+        .prop-segment-1 {{ background: #2E7D32; width: {lampung_prop}%; display: flex; align-items: center; justify-content: center; color: white; font-size: 7px; font-weight: 800; }}
+        .prop-segment-2 {{ background: #1565C0; width: {luar_prop}%; display: flex; align-items: center; justify-content: center; color: white; font-size: 7px; font-weight: 800; }}
+        .prop-legend {{ display: flex; justify-content: space-between; font-size: 7px; font-weight: 700; color: #555; }}
 
-        .flow-container {{ display: flex; flex-direction: column; gap: 3px; align-items: center; }}
-        .flow-node {{ background: #E8F5E9; border: 1px solid #2E7D32; color: #1E3A1E; padding: 4px 8px; border-radius: 4px; font-size: 8px; font-weight: 800; width: 100%; text-align: center; }}
+        .flow-container {{ display: flex; flex-direction: column; gap: 2px; align-items: center; }}
+        .flow-node {{ background: #E8F5E9; border: 1px solid #2E7D32; color: #1E3A1E; padding: 3px 6px; border-radius: 3px; font-size: 7.5px; font-weight: 800; width: 100%; text-align: center; }}
         .flow-node.blue {{ background: #E3F2FD; border-color: #1565C0; color: #0D47A1; }}
         .flow-node.orange {{ background: #FFF8E1; border-color: #F57F17; color: #E65100; }}
         .flow-node.purple {{ background: #EDE7F6; border-color: #4A148C; color: #311B92; }}
-        .flow-arrow {{ font-size: 7.5px; color: #666; margin: -2px 0; }}
+        .flow-arrow {{ font-size: 6.5px; color: #666; margin: -2px 0; }}
 
-        .community-box {{ display: flex; align-items: center; gap: 8px; background: #E8F5E9; padding: 6px 8px; border-radius: 5px; border: 1px solid #C8E6C9; }}
-        .community-icons-group {{ display: flex; gap: 2px; color: #2E7D32; font-size: 12px; background: white; padding: 5px 6px; border-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }}
+        .community-box {{ display: flex; align-items: center; gap: 6px; background: #E8F5E9; padding: 4px 6px; border-radius: 4px; border: 1px solid #C8E6C9; }}
+        .community-icons-group {{ display: flex; gap: 2px; color: #2E7D32; font-size: 10px; background: white; padding: 3px 4px; border-radius: 3px; }}
         .community-info {{ flex-grow: 1; }}
-        .community-info h4 {{ margin: 0; font-size: 9.5px; color: #1E3A1E; font-weight: 800; }}
-        .community-info p {{ margin: 2px 0 3px 0; font-size: 7.5px; color: #388E3C; font-weight: 600; }}
-        .progress-track {{ background: #C8E6C9; height: 5px; border-radius: 3px; width: 100%; overflow: hidden; }}
-        .progress-fill {{ background: #2E7D32; height: 100%; width: {keterlibatan_masyarakat_val}%; border-radius: 3px; }}
+        .community-info h4 {{ margin: 0; font-size: 8.5px; color: #1E3A1E; font-weight: 800; }}
+        .community-info p {{ margin: 1px 0 2px 0; font-size: 6.5px; color: #388E3C; font-weight: 600; }}
+        .progress-track {{ background: #C8E6C9; height: 4px; border-radius: 2px; width: 100%; overflow: hidden; }}
+        .progress-fill {{ background: #2E7D32; height: 100%; width: {keterlibatan_masyarakat_val}%; border-radius: 2px; }}
 
-        .slogan-card {{ background: linear-gradient(135deg, #0F3255, #1E3A5F); color: white; padding: 8px 10px; border-radius: 6px; display: flex; flex-direction: column; gap: 6px; border: 1px solid rgba(255,255,255,0.15); }}
-        .slogan-item {{ display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.08); padding: 5px 8px; border-radius: 4px; }}
-        .slogan-item i {{ color: #FFD700; font-size: 11px; }}
-        .slogan-text {{ font-size: 8.5px; font-weight: 700; letter-spacing: 0.3px; }}
+        .slogan-card {{ background: linear-gradient(135deg, #0F3255, #1E3A5F); color: white; padding: 6px 8px; border-radius: 5px; display: flex; flex-direction: column; gap: 4px; border: 1px solid rgba(255,255,255,0.15); }}
+        .slogan-item {{ display: flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.08); padding: 3px 6px; border-radius: 3px; }}
+        .slogan-item i {{ color: #FFD700; font-size: 9px; }}
+        .slogan-text {{ font-size: 7.5px; font-weight: 700; }}
 
-        .fade-img-container {{ position: relative; border-radius: 6px; overflow: hidden; border: 1px solid #E0E0E0; max-height: 105px; }}
-        .fade-img-container img {{ width: 100%; height: 105px; object-fit: cover; display: block; filter: brightness(0.9); }}
-        .fade-overlay {{ position: absolute; bottom: 0; left: 0; right: 0; height: 48px; background: linear-gradient(to top, rgba(15,50,85,0.9), transparent); display: flex; align-items: flex-end; padding: 6px 10px; }}
-        .fade-text {{ color: white; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }}
+        .fade-img-container {{ position: relative; border-radius: 5px; overflow: hidden; border: 1px solid #E0E0E0; max-height: 80px; }}
+        .fade-img-container img {{ width: 100%; height: 80px; object-fit: cover; display: block; }}
+        .fade-overlay {{ position: absolute; bottom: 0; left: 0; right: 0; height: 35px; background: linear-gradient(to top, rgba(15,50,85,0.9), transparent); display: flex; align-items: flex-end; padding: 4px 8px; }}
+        .fade-text {{ color: white; font-size: 7.5px; font-weight: 800; text-transform: uppercase; }}
 
-        .footer-banner {{ background: linear-gradient(135deg, #0F3255, #1565C0); color: white; padding: 8px 12px; border-radius: 5px; text-align: center; margin-top: 6px; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+        .footer-banner {{ background: linear-gradient(135deg, #0F3255, #1565C0); color: white; padding: 6px 10px; border-radius: 4px; text-align: center; margin-top: 4px; font-size: 8px; font-weight: 700; }}
     </style>
 </head>
 <body>
@@ -266,12 +266,12 @@ dashboard_html = f"""
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-chart-line" style="color: #2E7D32;"></i> Tren Kunjungan Wisatawan</div>
-                <canvas id="trendChart" height="110"></canvas>
+                <canvas id="trendChart" height="75"></canvas>
             </div>
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-umbrella" style="color: #2E7D32;"></i> Fasilitas Wisata (Jumlah Unit)</div>
-                <canvas id="facilityChart" height="110"></canvas>
+                <canvas id="facilityChart" height="75"></canvas>
             </div>
 
             <div class="card-box">
@@ -291,7 +291,7 @@ dashboard_html = f"""
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-map-location-dot" style="color: #2E7D32;"></i> Lokasi Semenanjung Badran</div>
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.6!2d105.3076663!3d-5.0563089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNcKwMDMnMjIuNyJTIDEwNcKwMTgnMjcuNiJF!5e0!3m2!1sid!2sid!4v1650000000000!5m2!1sid!2sid" 
-                        width="100%" height="105" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        width="100%" height="75" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </div>
 
@@ -311,12 +311,12 @@ dashboard_html = f"""
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-money-bill-trend-up" style="color: #1565C0;"></i> Pendapatan Pariwisata (Juta Rp)</div>
-                <canvas id="revenueChart" height="110"></canvas>
+                <canvas id="revenueChart" height="75"></canvas>
             </div>
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-wallet" style="color: #1565C0;"></i> Pengeluaran Pariwisata (%)</div>
-                <canvas id="expenseChart" height="110"></canvas>
+                <canvas id="expenseChart" height="75"></canvas>
             </div>
 
             <div class="card-box">
@@ -367,17 +367,17 @@ dashboard_html = f"""
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-circle-info" style="color: #4A148C;"></i> Sumber Informasi Wisatawan (%)</div>
-                <canvas id="sourceChart" height="110"></canvas>
+                <canvas id="sourceChart" height="75"></canvas>
             </div>
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-chart-line" style="color: #4A148C;"></i> Engagement Media Sosial</div>
-                <canvas id="engagementChart" height="110"></canvas>
+                <canvas id="engagementChart" height="75"></canvas>
             </div>
 
             <div class="card-box">
                 <div class="section-title"><i class="fa-solid fa-square-poll-vertical" style="color: #4A148C;"></i> Tingkat Kepuasan Promosi (%)</div>
-                <canvas id="satisfactionPromoChart" height="110"></canvas>
+                <canvas id="satisfactionPromoChart" height="75"></canvas>
             </div>
 
             <div class="slogan-card">
@@ -408,15 +408,15 @@ dashboard_html = f"""
 
     <script>
         Chart.defaults.font.family = 'Inter';
-        Chart.defaults.font.size = 8;
+        Chart.defaults.font.size = 7.5;
         Chart.defaults.color = '#555';
 
         const informativeTooltip = {{
             backgroundColor: 'rgba(15, 50, 85, 0.95)',
-            titleFont: {{ size: 9, weight: 'bold' }},
-            bodyFont: {{ size: 8 }},
-            padding: 6,
-            cornerRadius: 5,
+            titleFont: {{ size: 8.5, weight: 'bold' }},
+            bodyFont: {{ size: 7.5 }},
+            padding: 5,
+            cornerRadius: 4,
             displayColors: true,
             callbacks: {{
                 label: function(context) {{
@@ -436,7 +436,7 @@ dashboard_html = f"""
 
         // 1. Trend Chart
         const ctxTrend = document.getElementById('trendChart').getContext('2d');
-        const gradientTrend = ctxTrend.createLinearGradient(0, 0, 0, 110);
+        const gradientTrend = ctxTrend.createLinearGradient(0, 0, 0, 75);
         gradientTrend.addColorStop(0, 'rgba(46, 125, 50, 0.35)');
         gradientTrend.addColorStop(1, 'rgba(46, 125, 50, 0.0)');
 
@@ -452,7 +452,7 @@ dashboard_html = f"""
                     borderWidth: 2,
                     fill: true,
                     tension: 0.35,
-                    pointRadius: 2
+                    pointRadius: 1.5
                 }}]
             }},
             options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
@@ -467,7 +467,7 @@ dashboard_html = f"""
                     label: 'Jumlah Unit',
                     data: [12, 18, 4, 8, 10, 15].map(v => Math.round(v * cf)),
                     backgroundColor: '#2E7D32',
-                    borderRadius: 4
+                    borderRadius: 3
                 }}]
             }},
             options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
@@ -482,7 +482,7 @@ dashboard_html = f"""
                     label: 'Pendapatan (Juta Rp)',
                     data: [8.5, 9.2, 10.1, 14.5, 16.2, 18.8, 13.0, 14.2, 11.5, 11.0, 12.2, 17.5].map(v => +(v * cf).toFixed(1)),
                     backgroundColor: '#1565C0',
-                    borderRadius: 4
+                    borderRadius: 3
                 }}]
             }},
             options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
@@ -498,7 +498,7 @@ dashboard_html = f"""
                     backgroundColor: ['#1565C0', '#2E7D32', '#F57F17', '#4A148C']
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ position: 'bottom', labels: {{ boxWidth: 8, font: {{ size: 7.5 }} }} }}, tooltip: informativeTooltip }} }}
+            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ position: 'bottom', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }} }}
         }});
 
         // 5. Source Chart
@@ -511,7 +511,7 @@ dashboard_html = f"""
                     backgroundColor: ['#4A148C', '#1565C0', '#2E7D32', '#F57F17']
                 }}]
             }},
-            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ position: 'bottom', labels: {{ boxWidth: 8, font: {{ size: 7.5 }} }} }}, tooltip: informativeTooltip }} }}
+            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ position: 'bottom', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }} }}
         }});
 
         // 6. Engagement Chart
@@ -527,7 +527,7 @@ dashboard_html = f"""
                     borderWidth: 2,
                     fill: true,
                     tension: 0.35,
-                    pointRadius: 2
+                    pointRadius: 1.5
                 }}]
             }},
             options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
@@ -542,7 +542,7 @@ dashboard_html = f"""
                     label: 'Responden',
                     data: [85, 45, 15, 5].map(v => Math.round(v * cf)),
                     backgroundColor: '#F57F17',
-                    borderRadius: 4
+                    borderRadius: 3
                 }}]
             }},
             options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
@@ -552,5 +552,5 @@ dashboard_html = f"""
 </html>
 """
 
-# Render ke dalam Streamlit
-st.components.v1.html(dashboard_html, height=1400, scrolling=True)
+# Render ke dalam Streamlit dengan tinggi yang pas (840px) tanpa jeda kosong ke bawah
+st.components.v1.html(dashboard_html, height=840, scrolling=False)
