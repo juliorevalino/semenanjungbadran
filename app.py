@@ -73,7 +73,7 @@ kepuasan = random.randint(82, 95)
 tiket_rp = round(68.2 * multiplier, 1)
 pengunjung_hari_ini = int(156 * multiplier * (random.uniform(0.8, 1.2)))
 
-# 4. Konten HTML/CSS Dashboard (F-String agar variabel Python bisa masuk ke HTML)
+# 4. Konten HTML/CSS Dashboard
 dashboard_html = f"""
 <!DOCTYPE html>
 <html lang="id">
@@ -86,7 +86,7 @@ dashboard_html = f"""
         * {{ font-family: 'Inter', sans-serif; box-sizing: border-box; }}
         body {{ background-color: #F0F4F8; margin: 0; padding: 0; overflow-x: hidden; }}
         
-        /* BANNER ATAS DENGAN GAMBAR ALAM (BISA DIGANTI URL-NYA) */
+        /* BANNER ATAS */
         .top-banner {{
             background: linear-gradient(rgba(15, 50, 85, 0.85), rgba(15, 50, 85, 0.7)), 
                         url('https://images.unsplash.com/photo-1542361345-89e58247f2d5?q=80&w=2070&auto=format&fit=crop') center/cover;
@@ -116,15 +116,11 @@ dashboard_html = f"""
         .m-icon {{ font-size: 14px; margin: 0 auto 5px auto; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }}
         .m-title {{ font-size: 8px; font-weight: 800; color: #555; text-transform: uppercase; }}
         .m-value {{ font-size: 15px; font-weight: 800; color: #111; margin: 3px 0; }}
-        .m-sub {{ font-size: 8px; font-weight: 700; color: #777; }}
-
+        
         /* ELEMEN DESAIN SPESIFIK */
         .section-title {{ font-size: 12px; font-weight: 800; color: #333; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; border-bottom: 2px solid #F0F0F0; padding-bottom: 6px; }}
         
-        /* Progress Bar Wisatawan (Modern) */
-        .custom-bar-container {{ width: 100%; height: 35px; display: flex; border-radius: 8px; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin-top: 10px; }}
-        .bar-lampung {{ width: 75%; background: #2E7D32; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 11px; }}
-        .bar-luar {{ width: 25%; background: #F57F17; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 11px; }}
+        .chart-container {{ background: white; padding: 10px; border-radius: 8px; border: 1px solid #f0f0f0; margin-bottom: 10px; }}
         
         /* Flowchart */
         .flow-node {{ background: #E8F5E9; border: 1px solid #2E7D32; color: #1E3A1E; padding: 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-align: center; margin-bottom: 5px; }}
@@ -157,7 +153,7 @@ dashboard_html = f"""
             </div>
             <div class="stat-item">
                 <span>Pendapatan</span>
-                <strong style="color: #64B5F6;">Rp {pendapatan:,.1f} Juta</strong>
+                <strong style="color: #64B5F6;">Rp {pendapatan:,.1f} Jt</strong>
             </div>
             <div class="stat-item">
                 <span>Kepuasan</span>
@@ -179,14 +175,19 @@ dashboard_html = f"""
                 <div class="m-card"><div class="m-icon" style="color: #2E7D32; background: #E8F5E9;"><i class="fa-solid fa-ticket"></i></div><div class="m-title">Penjualan Tiket</div><div class="m-value">{tiket_rp} Jt</div></div>
             </div>
 
-            <div>
-                <div class="section-title"><i class="fa-solid fa-chart-line" style="color: #2E7D32;"></i> Tren Kunjungan</div>
-                <canvas id="trendChart" height="130"></canvas>
+            <div class="chart-container">
+                <div class="section-title"><i class="fa-solid fa-chart-line" style="color: #2E7D32;"></i> 1. Tren Kunjungan Wisatawan</div>
+                <canvas id="trendChart" height="150"></canvas>
             </div>
 
-            <div>
-                <div class="section-title"><i class="fa-solid fa-umbrella" style="color: #2E7D32;"></i> Jumlah Fasilitas Wisata (Unit)</div>
-                <canvas id="facilityChart" height="150"></canvas>
+            <div class="chart-container">
+                <div class="section-title"><i class="fa-solid fa-umbrella" style="color: #2E7D32;"></i> 2. Fasilitas Wisata (Unit)</div>
+                <canvas id="facilityChart" height="180"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="section-title"><i class="fa-solid fa-people-group" style="color: #2E7D32;"></i> 3. Jenis Wisatawan</div>
+                <canvas id="jenisWisatawanChart" height="180"></canvas>
             </div>
         </div>
 
@@ -200,11 +201,19 @@ dashboard_html = f"""
                 <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-handshake"></i></div><div class="m-title">Mitra Kerja</div><div class="m-value">12</div></div>
             </div>
 
-            <div>
-                <div class="section-title"><i class="fa-solid fa-sitemap" style="color: #1565C0;"></i> Struktur Pengelolaan</div>
-                <div class="flow-node">🏛️ Pemerintah Desa Badransari</div><div class="flow-arrow">↓</div>
-                <div class="flow-node" style="background: #E3F2FD; border-color: #1565C0; color: #0D47A1;">👥 Pokdarwis & Pengelola (27 Org)</div><div class="flow-arrow">↓</div>
-                <div class="flow-node" style="background: #FFF8E1; border-color: #F57F17; color: #E65100;">🏪 Pelaku UMKM & Masyarakat</div>
+            <div class="chart-container">
+                <div class="section-title"><i class="fa-solid fa-money-bill-trend-up" style="color: #1565C0;"></i> 4. Pendapatan Pariwisata (Juta Rp)</div>
+                <canvas id="pendapatanChart" height="150"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="section-title"><i class="fa-solid fa-wallet" style="color: #1565C0;"></i> 5. Pengeluaran Operasional</div>
+                <canvas id="pengeluaranChart" height="180"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="section-title"><i class="fa-solid fa-clipboard-question" style="color: #1565C0;"></i> 6. Keluhan Wisatawan</div>
+                <canvas id="keluhanChart" height="150"></canvas>
             </div>
 
             <div style="background: #F9F9F9; padding: 10px; border-radius: 8px; border: 1px solid #EEE;">
@@ -214,13 +223,6 @@ dashboard_html = f"""
                     <i class="fa-solid fa-person-walking"></i><i class="fa-solid fa-child"></i><i class="fa-solid fa-person"></i>
                     <i class="fa-solid fa-person-dress"></i><i class="fa-solid fa-person inactive"></i><i class="fa-solid fa-person inactive"></i>
                 </div>
-            </div>
-
-            <div>
-                <div class="section-title"><i class="fa-solid fa-calendar-days" style="color: #1565C0;"></i> Jadwal Event 2024</div>
-                <div class="event-item"><span class="event-date">14 Jan</span>Festival Desa Badransari</div>
-                <div class="event-item"><span class="event-date">24 Mar</span>Lomba Perahu Tradisional</div>
-                <div class="event-item"><span class="event-date">20 Jul</span>Festival Kuliner & Budaya</div>
             </div>
         </div>
 
@@ -234,22 +236,23 @@ dashboard_html = f"""
                 <div class="m-card"><div class="m-icon" style="color: #F57F17; background: #FFF8E1;"><i class="fa-solid fa-star"></i></div><div class="m-title">Google Rate</div><div class="m-value">4.6</div></div>
             </div>
 
-            <div>
-                <div class="section-title"><i class="fa-solid fa-users-viewfinder" style="color: #4A148C;"></i> Asal Wisatawan</div>
-                <div class="custom-bar-container">
-                    <div class="bar-lampung">Berasal dari Lampung (75%)</div>
-                    <div class="bar-luar">Luar (25%)</div>
-                </div>
+            <div class="chart-container">
+                <div class="section-title"><i class="fa-solid fa-map-pin" style="color: #4A148C;"></i> 7. Asal Daerah Wisatawan</div>
+                <canvas id="asalWisatawanChart" height="180"></canvas>
             </div>
 
-            <div>
-                <div class="section-title"><i class="fa-solid fa-bullseye" style="color: #4A148C;"></i> Kontribusi Media Promosi</div>
-                <canvas id="promoChart" height="140"></canvas>
+            <div class="chart-container">
+                <div class="section-title"><i class="fa-solid fa-thumbs-up" style="color: #4A148C;"></i> 8. Engagement Media Sosial</div>
+                <canvas id="engagementChart" height="150"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="section-title"><i class="fa-solid fa-fire" style="color: #4A148C;"></i> 9. Konten Terpopuler (Likes/Views)</div>
+                <canvas id="kontenChart" height="150"></canvas>
             </div>
 
             <div>
                 <div class="section-title"><i class="fa-solid fa-map-location-dot" style="color: #4A148C;"></i> Lokasi Semenanjung Badran</div>
-                <!-- Peta Interaktif Gmaps (Koordinat Kec. Punggur) -->
                 <div class="map-container">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127183.0560935575!2d105.197365!3d-5.0069507!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e40b7987817ebbf%3A0x4039d80b220cc30!2sPunggur%2C%20Kabupaten%20Lampung%20Tengah%2C%20Lampung!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
@@ -257,63 +260,140 @@ dashboard_html = f"""
         </div>
     </div>
 
+    <!-- KONFIGURASI JAVASCRIPT CHART.JS -->
     <script>
-        // 1. Grafik Tren Kunjungan
+        // Data Universal Modifier dari Python Filter
+        const mod = {multiplier};
+
+        // Konfigurasi umum untuk Legend Chart
+        const legendOption = {{ position: 'bottom', labels: {{ boxWidth: 12, font: {{ size: 10 }} }} }};
+
+        // 1. Line Chart: Tren Kunjungan
         new Chart(document.getElementById('trendChart').getContext('2d'), {{
             type: 'line',
             data: {{
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
                 datasets: [{{
                     label: 'Pengunjung',
-                    data: [240*{multiplier}, 280*{multiplier}, 520*{multiplier}, 610*{multiplier}, 480*{multiplier}, 510*{multiplier}],
+                    data: [240*mod, 280*mod, 520*mod, 610*mod, 480*mod, 510*mod],
                     borderColor: '#2E7D32', backgroundColor: 'rgba(46, 125, 50, 0.15)', borderWidth: 2, fill: true, tension: 0.4
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }} }}, scales: {{ y: {{ beginAtZero: true }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }} }} }}
         }});
 
-        // 2. Grafik Fasilitas (Angka Riil)
+        // 2. Doughnut Chart: Fasilitas Wisata
         new Chart(document.getElementById('facilityChart').getContext('2d'), {{
-            type: 'bar',
+            type: 'doughnut',
             data: {{
                 labels: ['Spot Foto', 'Gazebo', 'Toilet', 'Mushola', 'Warung', 'Tenda'],
                 datasets: [{{
-                    label: 'Jumlah (Unit)',
                     data: [12, 8, 6, 2, 15, 20],
-                    backgroundColor: ['#2E7D32', '#4CAF50', '#81C784', '#A5D6A7', '#C8E6C9', '#E8F5E9'],
-                    borderRadius: 4
+                    backgroundColor: ['#2E7D32', '#4CAF50', '#81C784', '#A5D6A7', '#C8E6C9', '#FBC02D']
                 }}]
             }},
-            options: {{ 
-                responsive: true, 
-                plugins: {{ legend: {{ display: false }} }}, 
-                scales: {{ y: {{ beginAtZero: true, grid: {{ display: false }} }}, x: {{ grid: {{ display: false }} }} }} 
-            }}
+            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: legendOption }} }}
         }});
 
-        // 3. Media Promosi (Horizontal Bar Chart)
-        new Chart(document.getElementById('promoChart').getContext('2d'), {{
+        // 3. Pie Chart: Jenis Wisatawan
+        new Chart(document.getElementById('jenisWisatawanChart').getContext('2d'), {{
+            type: 'pie',
+            data: {{
+                labels: ['Keluarga', 'Rombongan', 'Pasangan', 'Individu'],
+                datasets: [{{
+                    data: [45, 25, 20, 10],
+                    backgroundColor: ['#1E88E5', '#43A047', '#E53935', '#FDD835']
+                }}]
+            }},
+            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: legendOption }} }}
+        }});
+
+        // 4. Bar Chart: Pendapatan Pariwisata
+        new Chart(document.getElementById('pendapatanChart').getContext('2d'), {{
             type: 'bar',
             data: {{
-                labels: ['Instagram', 'TikTok', 'Teman/Keluarga', 'Facebook', 'Website'],
+                labels: ['Tiket', 'Parkir', 'Kuliner', 'Souvenir', 'Sewa'],
                 datasets: [{{
-                    label: 'Kontribusi (%)',
-                    data: [35, 25, 20, 15, 5],
-                    backgroundColor: ['#E1306C', '#000000', '#F57F17', '#1565C0', '#4A148C'],
+                    label: 'Pendapatan (Juta Rp)',
+                    data: [45*mod, 15*mod, 60*mod, 20*mod, 35*mod],
+                    backgroundColor: '#1976D2', borderRadius: 4
+                }}]
+            }},
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }} }} }}
+        }});
+
+        // 5. Doughnut Chart: Pengeluaran Operasional
+        new Chart(document.getElementById('pengeluaranChart').getContext('2d'), {{
+            type: 'doughnut',
+            data: {{
+                labels: ['Gaji/Honor', 'Perawatan', 'Pemasaran', 'Operasional Lain'],
+                datasets: [{{
+                    data: [40, 25, 15, 20],
+                    backgroundColor: ['#D32F2F', '#1976D2', '#388E3C', '#FBC02D']
+                }}]
+            }},
+            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: legendOption }} }}
+        }});
+
+        // 6. Bar Chart: Keluhan Wisatawan
+        new Chart(document.getElementById('keluhanChart').getContext('2d'), {{
+            type: 'bar',
+            data: {{
+                labels: ['Kebersihan', 'Akses Jalan', 'Fasilitas', 'Harga'],
+                datasets: [{{
+                    label: 'Jumlah Keluhan',
+                    data: [15, 28, 10, 5],
+                    backgroundColor: '#E53935', borderRadius: 4
+                }}]
+            }},
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }} }} }}
+        }});
+
+        // 7. Doughnut Chart: Asal Daerah Wisatawan
+        new Chart(document.getElementById('asalWisatawanChart').getContext('2d'), {{
+            type: 'doughnut',
+            data: {{
+                labels: ['Lampung Tengah', 'Bandar Lampung', 'Luar Lampung', 'Lainnya'],
+                datasets: [{{
+                    data: [50, 25, 15, 10],
+                    backgroundColor: ['#6A1B9A', '#8E24AA', '#AB47BC', '#CE93D8']
+                }}]
+            }},
+            options: {{ responsive: true, maintainAspectRatio: false, plugins: {{ legend: legendOption }} }}
+        }});
+
+        // 8. Line Chart: Engagement Media Sosial
+        new Chart(document.getElementById('engagementChart').getContext('2d'), {{
+            type: 'line',
+            data: {{
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                datasets: [{{
+                    label: 'Interaksi',
+                    data: [1200*mod, 1500*mod, 1400*mod, 2100*mod, 1800*mod, 2500*mod],
+                    borderColor: '#E1306C', backgroundColor: 'rgba(225, 48, 108, 0.1)', borderWidth: 2, fill: true, tension: 0.3
+                }}]
+            }},
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }} }} }}
+        }});
+
+        // 9. Horizontal Bar Chart: Konten Terpopuler
+        new Chart(document.getElementById('kontenChart').getContext('2d'), {{
+            type: 'bar',
+            data: {{
+                labels: ['Video Drone', 'Review Makanan', 'Event Budaya', 'Spot Foto'],
+                datasets: [{{
+                    label: 'Engagement',
+                    data: [8500, 6200, 4800, 3100],
+                    backgroundColor: ['#E1306C', '#1DA1F2', '#4267B2', '#FF0000'],
                     borderRadius: 4
                 }}]
             }},
-            options: {{ 
-                indexAxis: 'y', 
-                responsive: true, 
-                plugins: {{ legend: {{ display: false }} }}, 
-                scales: {{ x: {{ max: 40, beginAtZero: true }} }} 
-            }}
+            options: {{ indexAxis: 'y', responsive: true, plugins: {{ legend: {{ display: false }} }} }}
         }});
     </script>
 </body>
 </html>
 """
 
-# Render HTML ke Streamlit
-st.components.v1.html(dashboard_html, height=950, scrolling=True)
+# Render HTML ke Streamlit (Height disesuaikan jadi 1600 agar semua chart muat dan tidak terpotong)
+st.components.v1.html(dashboard_html, height=1700, scrolling=True)
