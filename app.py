@@ -17,10 +17,10 @@ st.set_page_config(
 st.markdown("""
     <style>
     .block-container {
-        padding-top: 2rem !important;
-        padding-bottom: 1rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+        padding-top: 1.5rem !important;
+        padding-bottom: 0rem !important;
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
         max-width: 100% !important;
     }
     
@@ -56,7 +56,7 @@ st.markdown("""
         font-size: 10px; 
         margin: 3px 0 0 0; 
     }
-    iframe { border: none; border-radius: 8px; }
+    iframe { border: none; border-radius: 8px; width: 100% !important; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -178,32 +178,47 @@ dashboard_html = f"""
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {{ font-family: 'Inter', sans-serif; box-sizing: border-box; }}
-        body {{ background-color: #F0F4F8; margin: 0; padding: 0; }}
+        html, body {{ 
+            background-color: #F0F4F8; 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            max-width: 100%;
+            overflow-x: hidden; 
+        }}
         
         .top-banner {{
             background: linear-gradient(rgba(15, 50, 85, 0.88), rgba(15, 50, 85, 0.78)), 
                         url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2000&auto=format&fit=crop') center/cover;
-            padding: 14px 22px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: white;
+            padding: 12px 18px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: white;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 100%;
         }}
         .logo-area {{ display: flex; align-items: center; gap: 14px; }}
-        .title-area h1 {{ font-size: 17px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; color: #FFD700; }}
-        .title-area p {{ font-size: 11px; font-weight: 600; margin: 3px 0 0 0; color: #E0E0E0; }}
+        .title-area h1 {{ font-size: 16px; font-weight: 800; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; color: #FFD700; }}
+        .title-area p {{ font-size: 10.5px; font-weight: 600; margin: 2px 0 0 0; color: #E0E0E0; }}
         
-        .stats-group {{ display: flex; gap: 10px; }}
-        .stat-item {{ background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.35); padding: 6px 12px; border-radius: 6px; text-align: center; }}
+        .stats-group {{ display: flex; gap: 8px; }}
+        .stat-item {{ background: rgba(255, 255, 255, 0.18); backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.35); padding: 5px 10px; border-radius: 6px; text-align: center; }}
         .stat-item span {{ display: block; font-size: 8px; font-weight: 700; color: #FFD700; text-transform: uppercase; }}
-        .stat-item strong {{ font-size: 13px; font-weight: 800; color: white; }}
+        .stat-item strong {{ font-size: 12px; font-weight: 800; color: white; }}
 
-        .three-column-grid {{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }}
-        .column-box {{ display: flex; flex-direction: column; gap: 10px; }}
+        .three-column-grid {{ 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin-bottom: 10px; 
+            width: 100%;
+        }}
+        .column-box {{ display: flex; flex-direction: column; gap: 10px; width: 100%; }}
         
-        .card-box {{ background: white; border-radius: 8px; padding: 10px 12px; border: 1px solid #E0E0E0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }}
+        .card-box {{ background: white; border-radius: 8px; padding: 10px 12px; border: 1px solid #E0E0E0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); width: 100%; }}
         
         .col-header {{ padding: 8px 12px; border-radius: 6px; font-weight: 800; color: white; font-size: 11px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }}
         .bg-green {{ background: #2E7D32; }}
@@ -245,7 +260,33 @@ dashboard_html = f"""
         .event-date {{ font-weight: 800; color: #1565C0; min-width: 45px; }}
         .event-name {{ font-weight: 600; color: #333; }}
 
-        .footer-banner {{ background: linear-gradient(135deg, #0F3255, #1565C0); color: white; padding: 10px 14px; border-radius: 6px; text-align: center; margin-top: 8px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }}
+        /* Rating Box Styling */
+        .rating-summary-box {{ display: flex; align-items: center; gap: 12px; background: #F3E5F5; padding: 8px 10px; border-radius: 6px; border: 1px solid #E1BEE7; margin-bottom: 6px; }}
+        .rating-score-big {{ font-size: 20px; font-weight: 800; color: #4A148C; line-height: 1; text-align: center; }}
+        .rating-stars {{ color: #FFD700; font-size: 10px; margin-top: 2px; }}
+        .rating-details {{ flex-grow: 1; display: flex; flex-direction: column; gap: 3px; }}
+        .rating-bar-row {{ display: flex; align-items: center; gap: 6px; font-size: 8.5px; font-weight: 700; color: #444; }}
+        .rating-bar-bg {{ flex-grow: 1; background: #E0E0E0; height: 5px; border-radius: 3px; overflow: hidden; }}
+        .rating-bar-fill {{ background: #7B1FA2; height: 100%; border-radius: 3px; }}
+
+        /* Footer Banner Banner Baru dengan Motif / Ilustrasi Siger Lampung */
+        .footer-banner {{ 
+            background: linear-gradient(135deg, #0B2540 0%, #0F3255 50%, #1A4975 100%); 
+            border: 2px solid #FFD700;
+            color: white; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            width: 100%;
+        }}
+        .siger-container {{ display: flex; align-items: center; justify-content: center; opacity: 0.95; }}
+        .slogan-content {{ text-align: center; flex-grow: 1; padding: 0 15px; }}
+        .slogan-title {{ font-size: 12px; font-weight: 800; color: #FFD700; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 3px; }}
+        .slogan-text {{ font-size: 10px; font-weight: 600; color: #F0F4F8; font-style: italic; letter-spacing: 0.3px; }}
     </style>
 </head>
 <body>
@@ -275,6 +316,7 @@ dashboard_html = f"""
 
     <div class="three-column-grid">
         
+        <!-- KOLOM 1 -->
         <div class="column-box">
             <div class="card-box">
                 <div class="col-header bg-green"><i class="fa-solid fa-umbrella-beach"></i> 1. Layanan Pariwisata</div>
@@ -338,6 +380,7 @@ dashboard_html = f"""
             </div>
         </div>
 
+        <!-- KOLOM 2 -->
         <div class="column-box">
             <div class="card-box">
                 <div class="col-header bg-blue"><i class="fa-solid fa-gear"></i> 2. Manajemen Pariwisata</div>
@@ -400,6 +443,7 @@ dashboard_html = f"""
             </div>
         </div>
 
+        <!-- KOLOM 3 -->
         <div class="column-box">
             <div class="card-box">
                 <div class="col-header bg-purple"><i class="fa-solid fa-bullhorn"></i> 3. Pemasaran Pariwisata</div>
@@ -441,12 +485,75 @@ dashboard_html = f"""
                     <div style="display: flex; justify-content: space-between; background: #FAFAFA; padding: 5px 8px; border-radius: 4px;"><span>3. Festival & Event Desa</span><span style="color: #4A148C;">20%</span></div>
                 </div>
             </div>
+
+            <!-- BAGIAN KANAN BAWAH BARU: TINGKAT KEPUASAN PROMOSI -->
+            <div class="card-box">
+                <div class="section-title"><i class="fa-solid fa-face-smile-beam" style="color: #4A148C;"></i> Tingkat Kepuasan Promosi</div>
+                <div class="rating-summary-box">
+                    <div>
+                        <div class="rating-score-big">4.8</div>
+                        <div class="rating-stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                        </div>
+                    </div>
+                    <div class="rating-details">
+                        <div class="rating-bar-row">
+                            <span>Sangat Puas</span>
+                            <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 82%;"></div></div>
+                            <span>82%</span>
+                        </div>
+                        <div class="rating-bar-row">
+                            <span>Puas</span>
+                            <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 14%;"></div></div>
+                            <span>14%</span>
+                        </div>
+                        <div class="rating-bar-row">
+                            <span>Cukup</span>
+                            <div class="rating-bar-bg"><div class="rating-bar-fill" style="width: 4%;"></div></div>
+                            <span>4%</span>
+                        </div>
+                    </div>
+                </div>
+                <div style="font-size: 8.5px; font-weight: 700; color: #666; text-align: center; background: #FAFAFA; padding: 4px; border-radius: 4px; border: 1px solid #EAEAEA;">
+                    <i class="fa-solid fa-circle-check" style="color: #2E7D32;"></i> 96% Wisatawan Merekomendasikan Media Informasi Desa
+                </div>
+            </div>
         </div>
 
     </div>
 
+    <!-- FOOTER SLOGAN DENGAN DESAIN KHAS & ILUSTRASI SIGER LAMPUNG -->
     <div class="footer-banner">
-        “Bersama Membangun Pariwisata Desa Badransari yang Berkelanjutan, Berdaya Saing, dan Berbasis Masyarakat”
+        <div class="siger-container">
+            <svg viewBox="0 0 120 60" width="48" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M60 4 L64 22 L72 9 L74 25 L84 15 L83 28 L94 22 L92 33 L103 29 L98 42 L22 42 L17 29 L28 33 L26 22 L37 28 L36 15 L46 25 L48 9 L56 22 Z" fill="#FFD700" stroke="#DAA520" stroke-width="1.5"/>
+                <path d="M24 45 H96 V48 H24 Z" fill="#FFD700"/>
+                <circle cx="60" cy="12" r="2" fill="#FFF"/>
+                <circle cx="48" cy="16" r="1.5" fill="#FFF"/>
+                <circle cx="72" cy="16" r="1.5" fill="#FFF"/>
+                <circle cx="36" cy="21" r="1.5" fill="#FFF"/>
+                <circle cx="84" cy="21" r="1.5" fill="#FFF"/>
+            </svg>
+        </div>
+        <div class="slogan-content">
+            <div class="slogan-title">Desa Wisata Semenanjung Badran</div>
+            <div class="slogan-text">“Bersama Membangun Pariwisata Desa Badransari yang Berkelanjutan, Berdaya Saing, dan Berbasis Masyarakat”</div>
+        </div>
+        <div class="siger-container">
+            <svg viewBox="0 0 120 60" width="48" height="28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M60 4 L64 22 L72 9 L74 25 L84 15 L83 28 L94 22 L92 33 L103 29 L98 42 L22 42 L17 29 L28 33 L26 22 L37 28 L36 15 L46 25 L48 9 L56 22 Z" fill="#FFD700" stroke="#DAA520" stroke-width="1.5"/>
+                <path d="M24 45 H96 V48 H24 Z" fill="#FFD700"/>
+                <circle cx="60" cy="12" r="2" fill="#FFF"/>
+                <circle cx="48" cy="16" r="1.5" fill="#FFF"/>
+                <circle cx="72" cy="16" r="1.5" fill="#FFF"/>
+                <circle cx="36" cy="21" r="1.5" fill="#FFF"/>
+                <circle cx="84" cy="21" r="1.5" fill="#FFF"/>
+            </svg>
+        </div>
     </div>
 
     <script>
@@ -511,7 +618,7 @@ dashboard_html = f"""
                     pointRadius: 2.5
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('facilityChart').getContext('2d'), {{
@@ -525,7 +632,7 @@ dashboard_html = f"""
                     borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('complaintChart').getContext('2d'), {{
@@ -539,7 +646,7 @@ dashboard_html = f"""
                     borderRadius: 4
                 }}]
             }},
-            options: {{ indexAxis: 'y', responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ x: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, y: {{ grid: {{ display: false }} }} }} }}
+            options: {{ indexAxis: 'y', responsive: true, maintainAspectRatio: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ x: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, y: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('revenueChart').getContext('2d'), {{
@@ -553,7 +660,7 @@ dashboard_html = f"""
                     borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('expenseChart').getContext('2d'), {{
@@ -569,6 +676,7 @@ dashboard_html = f"""
             }},
             options: {{
                 responsive: true,
+                maintainAspectRatio: true,
                 plugins: {{
                     legend: {{ position: 'right', labels: {{ boxWidth: 8, font: {{ size: 8 }} }} }},
                     tooltip: {{
@@ -598,7 +706,7 @@ dashboard_html = f"""
                     borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('promoChart').getContext('2d'), {{
@@ -612,7 +720,7 @@ dashboard_html = f"""
                     borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('engagementChart').getContext('2d'), {{
@@ -625,7 +733,7 @@ dashboard_html = f"""
                     {{ label: 'Shares', data: [150, 220, 340, 450, 520, 680].map(v => Math.round(v * cf)), borderColor: '#BA68C8', tension: 0.3, pointRadius: 2 }}
                 ]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ position: 'bottom', labels: {{ boxWidth: 6, font: {{ size: 8 }} }} }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: true, plugins: {{ legend: {{ position: 'bottom', labels: {{ boxWidth: 6, font: {{ size: 8 }} }} }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('sourceChart').getContext('2d'), {{
@@ -639,11 +747,12 @@ dashboard_html = f"""
                     borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, maintainAspectRatio: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
     </script>
 </body>
 </html>
 """
 
-components.html(dashboard_html, height=1650, scrolling=True)
+# Pengaturan tinggi persis sesuai kontainer agar pas dan tidak ada sisa ruang kosong di bawah slogan
+components.html(dashboard_html, height=1380, scrolling=False)
