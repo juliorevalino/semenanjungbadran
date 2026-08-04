@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. Styling CSS untuk Mengatasi Cutoff Atas & Sidebar Scrollable
+# 2. Styling CSS untuk Konsistensi Tampilan
 st.markdown("""
     <style>
     .block-container {
@@ -59,7 +59,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Sidebar Filter Data
+# 3. Sidebar Filter Data (Tahun mencakup opsi "Semua")
 st.sidebar.markdown("""
     <div class="sidebar-title">
         <h3>Hibah BIMA Semenanjung Badran ITERA</h3>
@@ -68,7 +68,7 @@ st.sidebar.markdown("""
 """, unsafe_allow_html=True)
 
 st.sidebar.markdown('### <i class="fa-solid fa-filter"></i> FILTER DATA', unsafe_allow_html=True)
-filter_tahun = st.sidebar.selectbox("📅 Tahun", ["2025", "2024", "2026"])
+filter_tahun = st.sidebar.selectbox("📅 Tahun", ["Semua", "2025", "2024", "2026"])
 filter_bulan = st.sidebar.selectbox("🕒 Bulan", ["Semua", "Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"])
 filter_jenis_wisatawan = st.sidebar.selectbox("👥 Jenis Wisatawan", ["Semua", "Lampung", "Luar Lampung"])
 filter_jenis = st.sidebar.selectbox("⛰️ Jenis Wisata", ["Semua", "Wisata Alam", "Wisata Edukasi", "Kuliner & Outbound"])
@@ -83,50 +83,69 @@ st.sidebar.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# LOGIKA DINAMIS BERDASARKAN FILTER (TERMASUK FOLLOWERS & STATS)
+# PEMISAHAN LOGIKA: 
+# 1. year_factor (Hanya untuk bagian atas, followers, pokdarwis, dll)
+# 2. chart_factor (Untuk chart/grafik di bawah, bergantung semua filter)
 # ==========================================
-factor = 1.0
-if filter_tahun == "2024": 
-    factor *= 0.88
-elif filter_tahun == "2026": 
-    factor *= 1.25
 
+# 1. Faktor Khusus Tahun (Bagian Atas & Metrik Utama)
+year_factor = 1.0
+if filter_tahun == "2024":
+    year_factor = 0.88
+elif filter_tahun == "2026":
+    year_factor = 1.25
+elif filter_tahun == "Semua":
+    year_factor = 2.45  # Akumulasi total seluruh tahun
+
+# Metrik Atas & Manajemen (Hanya Berdasarkan Tahun)
+total_pengunjung = int(4922 * year_factor)
+pendapatan_total = round(152.7 * year_factor, 1)
+pengunjung_hari_ini = int(176 * (1.1 if filter_tahun != "Semua" else 1.5))
+tiket_val = round(78.4 * year_factor, 1)
+
+# Manajemen (Pokdarwis, Pengelola, UMKM, dll - Berdasarkan Tahun)
+pokdarwis_val = 3 if filter_tahun != "Semua" else 5
+pengelola_val = int(27 * year_factor)
+umkm_aktif_val = int(42 * year_factor)
+event_val = 8 if filter_tahun != "Semua" else 14
+mitra_val = int(12 * year_factor)
+relawan_val = int(36 * year_factor)
+
+# Followers & Media Sosial (Berbasis Tahun)
+ig_followers_val = f"{int(3842 * year_factor):,}".replace(",", ".")
+tiktok_val = f"{int(2156 * year_factor):,}".replace(",", ".")
+fb_reach_val = f"{int(8745 * year_factor):,}".replace(",", ".")
+website_val = f"{int(5231 * year_factor):,}".replace(",", ".")
+review_val = int(157 * year_factor)
+
+
+# 2. Faktor Lengkap untuk Grafik/Chart di Bawah (Bergantung Semua Filter)
+chart_factor = year_factor
 if filter_bulan != "Semua": 
-    factor *= 0.12
+    chart_factor *= 0.12
 
 lampung_prop = 75
 luar_prop = 25
 if filter_jenis_wisatawan == "Lampung":
-    factor *= 0.78
+    chart_factor *= 0.78
     lampung_prop = 100
     luar_prop = 0
 elif filter_jenis_wisatawan == "Luar Lampung":
-    factor *= 0.35
+    chart_factor *= 0.35
     lampung_prop = 0
     luar_prop = 100
 
 if filter_jenis == "Wisata Alam":
-    factor *= 0.55
+    chart_factor *= 0.55
 elif filter_jenis == "Wisata Edukasi":
-    factor *= 0.30
+    chart_factor *= 0.30
 elif filter_jenis == "Kuliner & Outbound":
-    factor *= 0.25
+    chart_factor *= 0.25
 
-factor = max(factor, 0.15)
+chart_factor = max(chart_factor, 0.15)
 
-total_pengunjung = int(4922 * factor)
-pendapatan_total = round(152.7 * factor, 1)
-pengunjung_hari_ini = int(176 * factor)
-tiket_val = round(78.4 * factor, 1)
 
-# Dinamis Followers & Metrik Pemasaran
-ig_followers_val = f"{int(3842 * factor):,}".replace(",", ".")
-tiktok_val = f"{int(2156 * factor):,}".replace(",", ".")
-fb_reach_val = f"{int(8745 * factor):,}".replace(",", ".")
-website_val = f"{int(5231 * factor):,}".replace(",", ".")
-review_val = int(157 * factor)
-
-# 4. Konten HTML/CSS Dashboard (Tanpa Ruang Kosong Bawah & Perbaikan Text Clipping)
+# 4. Konten HTML/CSS Dashboard
 dashboard_html = f"""
 <!DOCTYPE html>
 <html lang="id">
@@ -243,8 +262,8 @@ dashboard_html = f"""
                     <div class="m-card"><div class="m-icon" style="color: #2E7D32; background: #E8F5E9;"><i class="fa-solid fa-person-walking"></i></div><div class="m-title">Hari Ini</div><div class="m-value">{pengunjung_hari_ini}</div><div class="m-sub">Orang</div></div>
                     <div class="m-card"><div class="m-icon" style="color: #2E7D32; background: #E8F5E9;"><i class="fa-solid fa-ticket"></i></div><div class="m-title">Tiket</div><div class="m-value">{tiket_val}</div><div class="m-sub">Juta Rp</div></div>
                     <div class="m-card"><div class="m-icon" style="color: #2E7D32; background: #E8F5E9;"><i class="fa-solid fa-star"></i></div><div class="m-title">Kepuasan</div><div class="m-value">88%</div><div class="m-sub">Sangat Baik</div></div>
-                    <div class="m-card"><div class="m-icon" style="color: #2E7D32; background: #E8F5E9;"><i class="fa-solid fa-store"></i></div><div class="m-title">UMKM</div><div class="m-value">42</div><div class="m-sub">Unit</div></div>
-                    <div class="m-card"><div class="m-icon" style="color: #2E7D32; background: #E8F5E9;"><i class="fa-solid fa-house"></i></div><div class="m-title">Homestay</div><div class="m-value">15</div><div class="m-sub">Unit</div></div>
+                    <div class="m-card"><div class="m-icon" style="color: #2E7D32; background: #E8F5E9;"><i class="fa-solid fa-store"></i></div><div class="m-title">UMKM</div><div class="m-value">{umkm_aktif_val}</div><div class="m-sub">Unit</div></div>
+                    <div class="m-card"><div class="m-icon" style="color: #2E7D32; background: #E8F5E9;"><i class="fa-solid fa-house"></i></div><div class="m-title">Homestay</div><div class="m-value">{int(15 * year_factor)}</div><div class="m-sub">Unit</div></div>
                 </div>
             </div>
 
@@ -289,12 +308,12 @@ dashboard_html = f"""
             <div class="card-box">
                 <div class="col-header bg-blue"><i class="fa-solid fa-gear"></i> 2. Manajemen Pariwisata</div>
                 <div class="metric-subgrid">
-                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-users-gear"></i></div><div class="m-title">Pokdarwis</div><div class="m-value">3</div><div class="m-sub">Kelompok</div></div>
-                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-user-tie"></i></div><div class="m-title">Pengelola</div><div class="m-value">27</div><div class="m-sub">Orang</div></div>
-                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-shop"></i></div><div class="m-title">UMKM Aktif</div><div class="m-value">42</div><div class="m-sub">Unit</div></div>
-                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-calendar"></i></div><div class="m-title">Event</div><div class="m-value">8</div><div class="m-sub">Kegiatan</div></div>
-                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-handshake"></i></div><div class="m-title">Mitra</div><div class="m-value">12</div><div class="m-sub">Instansi</div></div>
-                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-hands-holding-child"></i></div><div class="m-title">Relawan</div><div class="m-value">36</div><div class="m-sub">Orang</div></div>
+                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-users-gear"></i></div><div class="m-title">Pokdarwis</div><div class="m-value">{pokdarwis_val}</div><div class="m-sub">Kelompok</div></div>
+                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-user-tie"></i></div><div class="m-title">Pengelola</div><div class="m-value">{pengelola_val}</div><div class="m-sub">Orang</div></div>
+                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-shop"></i></div><div class="m-title">UMKM Aktif</div><div class="m-value">{umkm_aktif_val}</div><div class="m-sub">Unit</div></div>
+                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-calendar"></i></div><div class="m-title">Event</div><div class="m-value">{event_val}</div><div class="m-sub">Kegiatan</div></div>
+                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-handshake"></i></div><div class="m-title">Mitra</div><div class="m-value">{mitra_val}</div><div class="m-sub">Instansi</div></div>
+                    <div class="m-card"><div class="m-icon" style="color: #1565C0; background: #E3F2FD;"><i class="fa-solid fa-hands-holding-child"></i></div><div class="m-title">Relawan</div><div class="m-value">{relawan_val}</div><div class="m-sub">Orang</div></div>
                 </div>
             </div>
 
@@ -407,14 +426,31 @@ dashboard_html = f"""
         Chart.defaults.font.size = 8;
         Chart.defaults.color = '#555';
 
-        const standardTooltip = {{
-            backgroundColor: 'rgba(15, 50, 85, 0.9)',
+        // Tooltip informatif dengan konteks unit data
+        const informativeTooltip = {{
+            backgroundColor: 'rgba(15, 50, 85, 0.95)',
             titleFont: {{ size: 9, weight: 'bold' }},
             bodyFont: {{ size: 8 }},
             padding: 8,
             cornerRadius: 6,
-            displayColors: false
+            displayColors: true,
+            callbacks: {{
+                label: function(context) {{
+                    let label = context.dataset.label || '';
+                    if (label) {{
+                        label += ': ';
+                    }}
+                    if (context.parsed.y !== null) {{
+                        label += context.parsed.y.toLocaleString('id-ID');
+                    }} else if (context.parsed !== null) {{
+                        label += context.parsed.toLocaleString('id-ID');
+                    }}
+                    return label;
+                }}
+            }}
         }};
+
+        const cf = {chart_factor};
 
         const ctxTrend = document.getElementById('trendChart').getContext('2d');
         const gradientTrend = ctxTrend.createLinearGradient(0, 0, 0, 110);
@@ -426,7 +462,8 @@ dashboard_html = f"""
             data: {{
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
                 datasets: [{{
-                    data: [240, 280, 310, 520, 610, 720, 480, 510, 420, 400, 440, 680],
+                    label: 'Jumlah Pengunjung',
+                    data: [240, 280, 310, 520, 610, 720, 480, 510, 420, 400, 440, 680].map(v => Math.round(v * cf)),
                     borderColor: '#2E7D32',
                     backgroundColor: gradientTrend,
                     borderWidth: 2,
@@ -435,7 +472,7 @@ dashboard_html = f"""
                     pointRadius: 2
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: standardTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('facilityChart').getContext('2d'), {{
@@ -443,12 +480,13 @@ dashboard_html = f"""
             data: {{
                 labels: ['Parkir', 'Toilet', 'Mushola', 'Gazebo', 'Spot Foto', 'Warung'],
                 datasets: [{{
-                    data: [2, 4, 2, 6, 8, 12],
+                    label: 'Jumlah Unit',
+                    data: [2, 4, 2, 6, 8, 12].map(v => Math.max(1, Math.round(v * (cf > 1 ? 1.2 : cf)))),
                     backgroundColor: '#2E7D32',
                     borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: standardTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('complaintChart').getContext('2d'), {{
@@ -456,12 +494,13 @@ dashboard_html = f"""
             data: {{
                 labels: ['Kebersihan', 'Jalan', 'Toilet', 'Parkir', 'Informasi'],
                 datasets: [{{
-                    data: [28, 22, 20, 15, 9],
+                    label: 'Jumlah Keluhan',
+                    data: [28, 22, 20, 15, 9].map(v => Math.round(v * cf)),
                     backgroundColor: '#388E3C',
                     borderRadius: 4
                 }}]
             }},
-            options: {{ indexAxis: 'y', responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: standardTooltip }}, scales: {{ x: {{ beginAtZero: true, max: 35, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, y: {{ grid: {{ display: false }} }} }} }}
+            options: {{ indexAxis: 'y', responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ x: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, y: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('revenueChart').getContext('2d'), {{
@@ -469,12 +508,13 @@ dashboard_html = f"""
             data: {{
                 labels: ['Tiket', 'Parkir', 'Sewa', 'Camping', 'UMKM'],
                 datasets: [{{
-                    data: [68, 22, 18, 15, 28],
+                    label: 'Pendapatan (Juta Rp)',
+                    data: [68, 22, 18, 15, 28].map(v => parseFloat((v * cf).toFixed(1))),
                     backgroundColor: '#1565C0',
                     borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: standardTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('expenseChart').getContext('2d'), {{
@@ -482,12 +522,13 @@ dashboard_html = f"""
             data: {{
                 labels: ['Kebersihan', 'Perawatan', 'Promosi', 'SDM', 'Infrastruktur'],
                 datasets: [{{
+                    label: 'Persentase (%)',
                     data: [30, 25, 15, 15, 15],
                     backgroundColor: ['#1565C0', '#42A5F5', '#90CAF9', '#BBDEFB', '#E3F2FD'],
                     borderWidth: 1
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: standardTooltip }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }} }}
         }});
 
         new Chart(document.getElementById('originChart').getContext('2d'), {{
@@ -495,12 +536,13 @@ dashboard_html = f"""
             data: {{
                 labels: ['Lampung', 'Sumsel', 'DKI', 'Banten', 'Jabar'],
                 datasets: [{{
+                    label: 'Persentase Asal (%)',
                     data: [55, 17, 10, 7, 6],
                     backgroundColor: '#4A148C',
                     borderRadius: 4
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: standardTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('promoChart').getContext('2d'), {{
@@ -508,12 +550,13 @@ dashboard_html = f"""
             data: {{
                 labels: ['Instagram', 'TikTok', 'Facebook', 'Website', 'YouTube'],
                 datasets: [{{
+                    label: 'Kontribusi Promosi (%)',
                     data: [35, 25, 15, 15, 10],
                     backgroundColor: '#7B1FA2',
                     borderRadius: 4
                 }}]
             }},
-            options: {{ indexAxis: 'y', responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: standardTooltip }}, scales: {{ x: {{ beginAtZero: true, max: 40, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, y: {{ grid: {{ display: false }} }} }} }}
+            options: {{ indexAxis: 'y', responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: informativeTooltip }}, scales: {{ x: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, y: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('engagementChart').getContext('2d'), {{
@@ -521,11 +564,11 @@ dashboard_html = f"""
             data: {{
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
                 datasets: [
-                    {{ label: 'Like', data: [1200, 1500, 1800, 2200, 2600, 3100], borderColor: '#4A148C', borderWidth: 2, tension: 0.35, pointRadius: 2 }},
-                    {{ label: 'Comment', data: [400, 600, 700, 900, 1100, 1400], borderColor: '#AB47BC', borderWidth: 2, tension: 0.35, pointRadius: 2 }}
+                    {{ label: 'Likes', data: [1200, 1500, 1800, 2200, 2600, 3100].map(v => Math.round(v * cf)), borderColor: '#4A148C', borderWidth: 2, tension: 0.35, pointRadius: 2 }},
+                    {{ label: 'Comments', data: [400, 600, 700, 900, 1100, 1400].map(v => Math.round(v * cf)), borderColor: '#AB47BC', borderWidth: 2, tension: 0.35, pointRadius: 2 }}
                 ]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ display: false }}, tooltip: standardTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ position: 'top', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }}, scales: {{ y: {{ beginAtZero: true, grid: {{ color: 'rgba(0,0,0,0.03)' }} }}, x: {{ grid: {{ display: false }} }} }} }}
         }});
 
         new Chart(document.getElementById('sourceChart').getContext('2d'), {{
@@ -533,18 +576,19 @@ dashboard_html = f"""
             data: {{
                 labels: ['Media Sosial', 'Teman/Keluarga', 'Google', 'Website', 'Banner'],
                 datasets: [{{
+                    label: 'Proporsi (%)',
                     data: [45, 25, 15, 10, 5],
                     backgroundColor: ['#4A148C', '#7B1FA2', '#AB47BC', '#CE93D8', '#F3E5F5'],
                     borderWidth: 1
                 }}]
             }},
-            options: {{ responsive: true, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: standardTooltip }} }}
+            options: {{ responsive: true, plugins: {{ legend: {{ position: 'right', labels: {{ boxWidth: 6, font: {{ size: 7 }} }} }}, tooltip: informativeTooltip }} }}
         }});
     </script>
 </body>
 </html>
 """
 
-# Render ke dalam Streamlit Component dengan tinggi optimal tanpa ruang kosong bawah
+# Render ke dalam Streamlit Component
 import streamlit.components.v1 as components
 components.html(dashboard_html, height=1380, scrolling=True)
